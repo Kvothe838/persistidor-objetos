@@ -1,12 +1,12 @@
 package com.example.persistidorobjetos;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.services.ClaseService;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
+@Component
 public class PersistentObject
 {
     @Autowired

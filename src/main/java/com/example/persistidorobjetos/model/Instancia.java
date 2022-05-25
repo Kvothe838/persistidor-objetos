@@ -17,6 +17,6 @@ public class Instancia {
     private Clase clase;
     @ManyToOne
     private Session session;
-    @OneToMany(mappedBy = "id_instancia")
+    @OneToMany
     private List<AtributoInstancia> atributos;
 }
