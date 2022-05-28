@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,7 +23,8 @@ public class Clase {
     private int id;
     @Column(name="nombre")
     private String nombre;
-    @OneToMany(mappedBy = "clase")
+    @OneToMany
+    @JoinColumn(name = "clase_id")
     private List<Atributo> atributos;
     
     

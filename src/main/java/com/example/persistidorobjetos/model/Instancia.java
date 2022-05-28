@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="clase")
+@Table(name="instancia")
 public class Instancia {
     @Id
     private int id;
