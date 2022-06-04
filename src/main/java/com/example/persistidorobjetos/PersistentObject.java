@@ -23,16 +23,10 @@ public class PersistentObject
     	Class<?> clazz = o.getClass();
 	    if(isPersistable(clazz)){
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
-
-	    	String nombreClase = clazz.getSimpleName();
 	
 	    	//se verifica la existencia de la clase en DB y se crea junto con sus atributos
-	        Clase claseExistente = this.claseService.getClaseByNombre(nombreClase);
-	
-	        if(claseExistente == null){
-	            this.claseService.saveClase(clazz);
-	            claseExistente = this.claseService.getClaseByNombre(nombreClase);
-	        }
+			this.claseService.getOrSaveClase(clazz);
+
 	        
 	        
 	        

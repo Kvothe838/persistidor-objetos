@@ -2,6 +2,7 @@ package com.example.persistidorobjetos.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -16,6 +17,7 @@ public class Atributo {
     @Column(name="nombre")
     private String nombre;
     @ManyToOne
+	@Cascade(org.hibernate.annotations.CascadeType.ALL)
     private TipoAtributo tipoAtributo;
     @ManyToOne
     private Clase clase;
