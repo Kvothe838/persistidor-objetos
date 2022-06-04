@@ -1,0 +1,494 @@
+/*C21*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C22*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C23*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C24*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C25*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C26*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C27*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C28*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C29*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C30*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C31*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C32*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C33*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C34*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C35*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C36*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C37*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C38*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C39*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C40*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C41*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C42*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C43*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C44*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C45*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C46*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C47*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C48*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C49*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C50*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C51*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C52*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C53*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C54*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C55*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C56*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C57*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C58*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C59*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C60*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C61*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C62*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C63*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C64*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C65*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C66*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C67*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C68*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C69*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C70*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C71*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C72*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C73*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C74*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C75*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C76*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C77*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C78*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C79*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C80*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C81*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C82*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C83*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C84*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C85*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C86*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C87*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C88*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C89*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C90*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C91*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C92*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C93*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C94*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C95*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C96*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C97*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C98*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C99*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C100*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C101*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C102*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C103*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C104*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C105*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C106*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C107*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C108*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C109*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C110*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C111*/SET SCHEMA PUBLIC
+DELETE FROM CLASE WHERE ID=0
+COMMIT
+/*C112*/SET SCHEMA PUBLIC
+\u000a    create table tipo_atributo (\u000a       id integer not null,\u000a        nombre varchar(255),\u000a        primary key (id)\u000a    )
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+\u000a    alter table atributo \u000a       add constraint FKkqtky9on2abxtw63p1u0apxb3 \u000a       foreign key (tipo_atributo_id) \u000a       references tipo_atributo
+INSERT INTO CLASE VALUES(0,'Persona1',NULL,NULL,NULL)
+COMMIT
+DISCONNECT
+/*C113*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C114*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C115*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C116*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C117*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C118*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C119*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C120*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C121*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C111*/DELETE FROM CLASE WHERE ID=0
+COMMIT
+/*C122*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+INSERT INTO CLASE VALUES(0,'Persona1',NULL,NULL,NULL)
+COMMIT
+DISCONNECT
+/*C123*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C124*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C125*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C126*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C127*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C128*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C129*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C130*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C131*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C132*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C133*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C134*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C135*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C136*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C137*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C138*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C139*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C140*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C141*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C111*/DELETE FROM CLASE WHERE ID=0
+COMMIT
+/*C142*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+DISCONNECT
+/*C143*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C144*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C145*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C146*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C147*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C148*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C149*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C150*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C151*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C152*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+INSERT INTO CLASE VALUES(0,'Persona1',NULL,NULL,NULL)
+COMMIT
+DISCONNECT
+/*C153*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C154*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C155*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C156*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C157*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C158*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C159*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C160*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C161*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C111*/DELETE FROM CLASE WHERE ID=0
+COMMIT
+/*C162*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+INSERT INTO CLASE VALUES(0,'Persona1',NULL,NULL,NULL)
+COMMIT
+DISCONNECT
+/*C163*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C164*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C165*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C166*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C167*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C168*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C169*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C170*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C171*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C111*/DELETE FROM CLASE WHERE ID=0
+COMMIT
+DISCONNECT
+/*C173*/SET SCHEMA PUBLIC
+\u000a    alter table clase_atributos \u000a       drop constraint UK_s5axjhea18rvc5npub1kwjq23
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+INSERT INTO CLASE VALUES(0,'Persona1',NULL,NULL,NULL)
+COMMIT
+DISCONNECT
+/*C174*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C175*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C176*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C177*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C178*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C179*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C180*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C181*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C182*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C172*/SET SCHEMA PUBLIC
+DROP TABLE VALOR_ATRIBUTO
+DROP TABLE CLASE_ATRIBUTOS
+DROP TABLE ATRIBUTO_INSTANCIA
+DROP TABLE ATRIBUTO
+DROP TABLE CLASE
+DROP TABLE TIPO_ATRIBUTO
+DROP TABLE TIPO_ATRBUTO
+/*C183*/SET SCHEMA PUBLIC
+\u000a    create table atributo (\u000a       id integer not null,\u000a        nombre varchar(255),\u000a        clase_id integer,\u000a        tipo_atributo_id integer,\u000a        primary key (id)\u000a    )
+\u000a    create table atributo_instancia (\u000a       id integer not null,\u000a        atributo_id integer,\u000a        instancia_id integer,\u000a        primary key (id)\u000a    )
+\u000a    create table clase (\u000a       id integer not null,\u000a        nombre varchar(255),\u000a        ultimo_acceso timestamp,\u000a        clase_id integer,\u000a        session_id integer,\u000a        primary key (id)\u000a    )
+\u000a    create table clase_atributos (\u000a       instancia_id integer not null,\u000a        atributos_id integer not null\u000a    )
+\u000a    create table tipo_atributo (\u000a       id integer not null,\u000a        nombre varchar(255),\u000a        primary key (id)\u000a    )
+\u000a    create table valor_atributo (\u000a       id integer not null,\u000a        valor varchar(255),\u000a        atributo_instancia_id integer,\u000a        primary key (id)\u000a    )
+\u000a    alter table clase_atributos \u000a       add constraint UK_s5axjhea18rvc5npub1kwjq23 unique (atributos_id)
+\u000a    alter table atributo \u000a       add constraint FK8imkjf76rp48kc118qd6pvrwq \u000a       foreign key (clase_id) \u000a       references clase
+\u000a    alter table atributo \u000a       add constraint FKkqtky9on2abxtw63p1u0apxb3 \u000a       foreign key (tipo_atributo_id) \u000a       references tipo_atributo
+\u000a    alter table atributo_instancia \u000a       add constraint FKja8tmkkrvxbc9tpned6i5s9ns \u000a       foreign key (atributo_id) \u000a       references atributo
+\u000a    alter table atributo_instancia \u000a       add constraint FKd903cg2400w66sgo1sbnm37h \u000a       foreign key (instancia_id) \u000a       references clase
+\u000a    alter table clase \u000a       add constraint FKqisb2e4422ep5elvjqv9j45gy \u000a       foreign key (clase_id) \u000a       references clase
+\u000a    alter table clase \u000a       add constraint FKr6rbj5ej9oh68wmn7bknoafe5 \u000a       foreign key (session_id) \u000a       references clase
+\u000a    alter table clase_atributos \u000a       add constraint FKqnymwa3t8u50jdfgrbperf5d4 \u000a       foreign key (atributos_id) \u000a       references atributo_instancia
+\u000a    alter table clase_atributos \u000a       add constraint FKkbg5fotcx8gxo6ms55rdg3dc9 \u000a       foreign key (instancia_id) \u000a       references clase
+\u000a    alter table valor_atributo \u000a       add constraint FK3fkhrb9fd6yvae0prvdllkctv \u000a       foreign key (atributo_instancia_id) \u000a       references atributo_instancia
+INSERT INTO CLASE VALUES(0,'Persona1',NULL,NULL,NULL)
+COMMIT
+DISCONNECT
+/*C184*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C185*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C186*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C187*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C188*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C189*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C190*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C191*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C192*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C172*/DROP TABLE CLASE_ATRIBUTOS
+DROP TABLE VALOR_ATRIBUTO
+DROP TABLE ATRIBUTO_INSTANCIA
+DROP TABLE ATRIBUTO
+DROP TABLE TIPO_ATRIBUTO
+DROP TABLE CLASE
+/*C193*/SET SCHEMA PUBLIC
+\u000a    create table atributo (\u000a       id integer not null,\u000a        nombre varchar(255),\u000a        clase_id integer,\u000a        tipo_atributo_id integer,\u000a        primary key (id)\u000a    )
+\u000a    create table atributo_instancia (\u000a       id integer not null,\u000a        atributo_id integer,\u000a        instancia_id integer,\u000a        primary key (id)\u000a    )
+\u000a    create table clase (\u000a       id integer not null,\u000a        nombre varchar(255),\u000a        primary key (id)\u000a    )
+\u000a    create table instancia (\u000a       id integer not null,\u000a        clase_id integer,\u000a        session_id integer,\u000a        primary key (id)\u000a    )
+\u000a    create table instancia_atributos (\u000a       instancia_id integer not null,\u000a        atributos_id integer not null\u000a    )
+\u000a    create table session (\u000a       id integer not null,\u000a        ultimo_acceso timestamp,\u000a        primary key (id)\u000a    )
+\u000a    create table tipo_atributo (\u000a       id integer not null,\u000a        nombre varchar(255),\u000a        primary key (id)\u000a    )
+\u000a    create table valor_atributo (\u000a       id integer not null,\u000a        valor varchar(255),\u000a        atributo_instancia_id integer,\u000a        primary key (id)\u000a    )
+\u000a    alter table instancia_atributos \u000a       add constraint UK_71fst9hngbubl75umqxq90qde unique (atributos_id)
+\u000a    alter table atributo \u000a       add constraint FK8imkjf76rp48kc118qd6pvrwq \u000a       foreign key (clase_id) \u000a       references clase
+\u000a    alter table atributo \u000a       add constraint FKkqtky9on2abxtw63p1u0apxb3 \u000a       foreign key (tipo_atributo_id) \u000a       references tipo_atributo
+\u000a    alter table atributo_instancia \u000a       add constraint FKja8tmkkrvxbc9tpned6i5s9ns \u000a       foreign key (atributo_id) \u000a       references atributo
+\u000a    alter table atributo_instancia \u000a       add constraint FKujwgw2ksvpi8oltmbctij29u \u000a       foreign key (instancia_id) \u000a       references instancia
+\u000a    alter table instancia \u000a       add constraint FKng0nxa11u7b6j6tdj8hq4l1jr \u000a       foreign key (clase_id) \u000a       references clase
+\u000a    alter table instancia \u000a       add constraint FKqv0hp87erg1hrusvwe497yf0x \u000a       foreign key (session_id) \u000a       references session
+\u000a    alter table instancia_atributos \u000a       add constraint FKkeb6kjoykv5y75hgg61wcl6j7 \u000a       foreign key (atributos_id) \u000a       references atributo_instancia
+\u000a    alter table instancia_atributos \u000a       add constraint FKag0gcugy6rqlwywy9qmwkhe46 \u000a       foreign key (instancia_id) \u000a       references instancia
+\u000a    alter table valor_atributo \u000a       add constraint FK3fkhrb9fd6yvae0prvdllkctv \u000a       foreign key (atributo_instancia_id) \u000a       references atributo_instancia
+INSERT INTO CLASE VALUES(0,'Persona1')
+COMMIT
+DISCONNECT
+/*C194*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C195*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C196*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C197*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C198*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C199*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C200*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C201*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C202*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C172*/DELETE FROM CLASE WHERE ID=0
+COMMIT
+/*C203*/SET SCHEMA PUBLIC
+\u000a    alter table instancia_atributos \u000a       drop constraint UK_71fst9hngbubl75umqxq90qde
+\u000a    alter table instancia_atributos \u000a       add constraint UK_71fst9hngbubl75umqxq90qde unique (atributos_id)
+INSERT INTO CLASE VALUES(0,'Persona1')
+COMMIT
+DISCONNECT
+/*C204*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C205*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C206*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C207*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C208*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C209*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C210*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C211*/SET SCHEMA PUBLIC
+DISCONNECT
+/*C212*/SET SCHEMA PUBLIC
+DISCONNECT
