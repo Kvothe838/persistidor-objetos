@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="tipo_atrbuto")
+@Table(name="tipo_atributo")
 public class TipoAtributo {
     @Id
     private int id;

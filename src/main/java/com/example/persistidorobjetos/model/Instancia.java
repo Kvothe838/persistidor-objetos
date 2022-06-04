@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="clase")
+@Table(name="instancia")
 public class Instancia {
     @Id
     private int id;
@@ -17,6 +17,6 @@ public class Instancia {
     private Clase clase;
     @ManyToOne
     private Session session;
-    @OneToMany(mappedBy = "id_instancia")
+    @OneToMany
     private List<AtributoInstancia> atributos;
 }

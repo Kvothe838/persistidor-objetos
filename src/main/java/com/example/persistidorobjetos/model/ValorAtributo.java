@@ -1,10 +1,16 @@
 package com.example.persistidorobjetos.model;
 
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.ArrayList;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +22,7 @@ public class ValorAtributo {
     @ManyToOne
     private AtributoInstancia atributoInstancia;
     @OneToMany(mappedBy = "id")
-    private ArrayList<ValorAtributo> valorAtributoList;
+    private List<ValorAtributo> valorAtributoList;
     @Column(name="valor")
     private String valor;
 }
