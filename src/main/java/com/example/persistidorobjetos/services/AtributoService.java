@@ -7,26 +7,35 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.lang.reflect.Field;
+import java.util.List;
 
 @Service
 public class AtributoService {
     @Autowired
+    private TipoAtributoService tipoAtributoService;
+    @Autowired
     private EntityManager em;
 
-    @Autowired
-    private TipoAtributoService tipoAtributoService;
-
-    @Transactional
-    public Atributo saveAtributo(Field field){
+    public Atributo getAtributo(Field field){
         Atributo atributo = new Atributo();
         atributo.setNombre(field.getName());
-
-        TipoAtributo tipoAtributo = this.tipoAtributoService.getOrSaveTipoAtributo(field.getType().getSimpleName());
+        TipoAtributo tipoAtributo = this.tipoAtributoService.getTipoAtributo(field.getType().getName());
         atributo.setTipoAtributo(tipoAtributo);
 
-        this.em.persist(atributo);
-
         return atributo;
+    }
+
+    public List<Atributo> getAll(){
+        CriteriaBuilder cb = this.em.getCriteriaBuilder();
+        CriteriaQuery<Atributo> cq = cb.createQuery(Atributo.class);
+        Root<Atributo> rootEntry = cq.from(Atributo.class);
+        CriteriaQuery<Atributo> all = cq.select(rootEntry);
+        TypedQuery<Atributo> allQuery = this.em.createQuery(all);
+        return allQuery.getResultList();
     }
 }

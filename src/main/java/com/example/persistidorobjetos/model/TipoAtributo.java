@@ -2,13 +2,11 @@ package com.example.persistidorobjetos.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +14,8 @@ import javax.persistence.Table;
 @Table(name="tipo_atributo")
 @Data
 public class TipoAtributo {
-    @Id @Generated
+    @Id
+    @GeneratedValue(strategy=SEQUENCE, generator="CUST_SEQ")
     private int id;
     @Column(name="nombre")
     private String nombre;

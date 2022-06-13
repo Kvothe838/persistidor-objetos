@@ -53,23 +53,25 @@ public class ClaseService {
     @Transactional
     public void saveClase(Class<?> clazz){
         Clase nuevaClase = this.generateClaseObject(clazz);
-        
+
         this.em.persist(nuevaClase);
     }
     
     public Clase generateClaseObject(Class<?> clazz){
     	Clase clase = new Clase();
-    	clase.setNombre(clazz.getSimpleName());
+    	clase.setNombre(clazz.getName());
     	List<Atributo> atributos = new ArrayList<Atributo>();
 
     	for(Field field : clazz.getDeclaredFields()){
     		if(field.isAnnotationPresent(Persistable.class) ||
     				(clazz.isAnnotationPresent(Persistable.class) && !field.isAnnotationPresent(NotPersistable.class))){
-    			Atributo atributo = atributoService.saveAtributo(field);
+    			Atributo atributo = this.atributoService.getAtributo(field);
     			atributos.add(atributo);
     		}
     	}
+
     	clase.setAtributos(atributos);
+
     	return clase;
     }
 }

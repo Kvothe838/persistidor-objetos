@@ -2,16 +2,14 @@ package com.example.persistidorobjetos.model;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
+
+import static javax.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,20 +18,20 @@ import lombok.NoArgsConstructor;
 @Table(name="clase")
 public class Clase {
     @Id
-    private int id;
+	@GeneratedValue(strategy=SEQUENCE, generator="CUST_SEQ")
+    private Long id;
     @Column(name="nombre")
     private String nombre;
-    @OneToMany
-    @JoinColumn(name = "clase_id")
+	@OneToMany(mappedBy = "clase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Atributo> atributos;
     
     
-	public int getId() {
+	/*public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
+	}*/
 	public String getNombre() {
 		return nombre;
 	}

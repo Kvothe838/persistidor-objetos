@@ -19,7 +19,7 @@ public class PersistentObject
     // segun actualiza o almacena.
     // El objeto o puede ser null, en tal caso el valor que se
     // almacenara sera null.
-    public boolean store(long sId, Object o){
+    public boolean store(long sId, Object o) throws Exception {
     	Class<?> clazz = o.getClass();
 	    if(isPersistable(clazz)){
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
@@ -32,7 +32,7 @@ public class PersistentObject
 	        
         
         }else{
-        	System.out.println("La clase no es persistible");
+			throw new Exception("Clase no persistible");
         }
         return true;
     };
