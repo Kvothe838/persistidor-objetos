@@ -26,6 +26,19 @@ public class ClaseService {
     @Autowired
     private AtributoService atributoService;
 
+    public Clase getOrSaveClase(Class<?> clazz){
+        String nombreClase = clazz.getSimpleName();
+        Clase claseExistente = this.getClaseByNombre(nombreClase);
+
+        if(claseExistente != null){
+            return claseExistente;
+        }
+
+        this.saveClase(clazz);
+
+        return this.getClaseByNombre(nombreClase);
+    }
+
     public Clase getClaseByNombre(String nombre) {
         String hql = "SELECT c.id, c.nombre FROM Clase c WHERE c.nombre =:nombre";
         Query q = this.em.createNativeQuery(hql, Clase.class);
@@ -39,9 +52,8 @@ public class ClaseService {
 
     @Transactional
     public void saveClase(Class<?> clazz){
-        Clase nuevaClase = new Clase();
-        nuevaClase.setNombre(clazz.getSimpleName());
-        
+        Clase nuevaClase = this.generateClaseObject(clazz);
+
         this.em.persist(nuevaClase);
     }
     
@@ -49,20 +61,17 @@ public class ClaseService {
     	Clase clase = new Clase();
     	clase.setNombre(clazz.getName());
     	List<Atributo> atributos = new ArrayList<Atributo>();
+
     	for(Field field : clazz.getDeclaredFields()){
     		if(field.isAnnotationPresent(Persistable.class) ||
     				(clazz.isAnnotationPresent(Persistable.class) && !field.isAnnotationPresent(NotPersistable.class))){
-    			Atributo atributo = atributoService.generateAtributo(field);
-    			atributos.add(atributo);    			
+    			Atributo atributo = this.atributoService.getAtributo(field);
+    			atributos.add(atributo);
     		}
     	}
+
     	clase.setAtributos(atributos);
+
     	return clase;
     }
-
-	public void setAtributoService(AtributoService atributoService) {
-		this.atributoService = atributoService;
-	}
-    
-    
 }
