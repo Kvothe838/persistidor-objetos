@@ -5,10 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 
-import static javax.persistence.GenerationType.SEQUENCE;
+import static javax.persistence.GenerationType.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,7 +19,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Data
 public class Atributo {
 	@Id
-	@GeneratedValue(strategy=SEQUENCE, generator="CUST_SEQ")
+	@GeneratedValue(strategy = TABLE)
     private int id;
     @Column(name="nombre")
     private String nombre;

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.SEQUENCE;
+import static javax.persistence.GenerationType.TABLE;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +16,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Data
 public class TipoAtributo {
     @Id
-    @GeneratedValue(strategy=SEQUENCE, generator="CUST_SEQ")
+    @GeneratedValue(strategy = TABLE)
     private int id;
     @Column(name="nombre")
     private String nombre;
