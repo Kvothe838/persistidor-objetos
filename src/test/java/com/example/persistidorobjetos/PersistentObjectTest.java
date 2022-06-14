@@ -6,13 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.example.persistidorobjetos.model.Atributo;
+import com.example.persistidorobjetos.model.Session;
 import com.example.persistidorobjetos.model.TipoAtributo;
 import com.example.persistidorobjetos.services.AtributoService;
+import com.example.persistidorobjetos.services.SessionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,11 +32,8 @@ import com.example.persistidorobjetos.services.ClaseService;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 @SpringBootTest
 @RunWith(SpringRunner.class) 
@@ -46,6 +46,8 @@ public class PersistentObjectTest {
     ClaseService claseService;
 	@Autowired
 	AtributoService atributoService;
+	@Autowired
+	SessionService sessionService;
 
 	@Before
 	@Transactional
@@ -65,16 +67,12 @@ public class PersistentObjectTest {
 		criteriaDeleteTipoAtributo.from(TipoAtributo.class);
 		int rowsDeletedTipoAtributo = this.em.createQuery(criteriaDeleteTipoAtributo).executeUpdate();
 		System.out.println("TipoAtributo entities deleted: " + rowsDeletedTipoAtributo);
+
+		CriteriaDelete<Session> criteriaDeleteSession = criteriaBuilder.createCriteriaDelete(Session.class);
+		criteriaDeleteSession.from(Session.class);
+		int rowsDeletedSession = this.em.createQuery(criteriaDeleteSession).executeUpdate();
+		System.out.println("Session entities deleted: " + rowsDeletedSession);
 	}
-
-//    @Test
-    public void SaveClaseWorks() throws Exception {
-        persistentObject.store(1, new Persona1());
-
-        Clase clase = this.claseService.getClaseByNombre("Persona1");
-        assertNotNull(clase);
-        assertEquals(clase.getNombre(),"Persona1");
-    }
     
 //    @Test
 	public void AnnotationPresent() throws NoSuchFieldException, SecurityException{
@@ -100,7 +98,7 @@ public class PersistentObjectTest {
 			assertFalse(f.isAnnotationPresent(Persistable.class));
 		}
 	}
-    
+
 	@Test
 	@Transactional
 	public void generateClaseWorks(){
@@ -111,7 +109,8 @@ public class PersistentObjectTest {
 	@Test
 	@Transactional
 	public void saveClaseWorks() throws Exception {
-		this.claseService.saveClase(Persona1.class);
+		this.persistentObject.store(1, new Persona1());
+
 		List<Atributo> atributos = this.atributoService.getAll();
 
 		assertEquals(2, atributos.size());
@@ -125,5 +124,17 @@ public class PersistentObjectTest {
 					&& Objects.equals(atributo.getTipoAtributo().getNombre(), String.class.getName())
 			)
 		);
-  }
+  	}
+
+	@Test
+	@Transactional
+	public void saveSessionWorks() throws Exception {
+		this.persistentObject.store(1, new Persona1());
+
+		Session session = this.sessionService.getSession(1);
+
+		assertNotNull(session);
+		assertEquals(1, session.getId());
+		assertNotNull(session.getUltimoAcceso());
+	}
 }
