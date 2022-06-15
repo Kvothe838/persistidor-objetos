@@ -19,25 +19,11 @@ import com.example.persistidorobjetos.model.Clase;
 
 @Service
 public class ClaseService {
-	
     @Autowired
     private EntityManager em;
     
     @Autowired
     private AtributoService atributoService;
-
-    public Clase getOrSaveClase(Class<?> clazz){
-        String nombreClase = clazz.getSimpleName();
-        Clase claseExistente = this.getClaseByNombre(nombreClase);
-
-        if(claseExistente != null){
-            return claseExistente;
-        }
-
-        this.saveClase(clazz);
-
-        return this.getClaseByNombre(nombreClase);
-    }
 
     public Clase getClaseByNombre(String nombre) {
         String hql = "SELECT c.id, c.nombre FROM Clase c WHERE c.nombre =:nombre";

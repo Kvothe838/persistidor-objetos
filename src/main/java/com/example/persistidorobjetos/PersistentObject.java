@@ -2,6 +2,7 @@ package com.example.persistidorobjetos;
 
 import java.lang.reflect.Field;
 
+import com.example.persistidorobjetos.services.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,8 @@ public class PersistentObject
 {
     @Autowired
     private ClaseService claseService;
+	@Autowired
+	private SessionService sessionService;
     // Almacena la instancia del objeto o asociada a la clave sId,
     // o actualiza la instancia existente retornando true o false
     // segun actualiza o almacena.
@@ -25,12 +28,8 @@ public class PersistentObject
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
 	
 	    	//se verifica la existencia de la clase en DB y se crea junto con sus atributos
-			this.claseService.getOrSaveClase(clazz);
-
-	        
-	        
-	        
-        
+			this.claseService.saveClase(clazz);
+			this.sessionService.saveOrUpdateSession(sId);
         }else{
 			throw new Exception("Clase no persistible");
         }
