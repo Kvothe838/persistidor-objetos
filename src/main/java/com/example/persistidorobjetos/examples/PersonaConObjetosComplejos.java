@@ -1,5 +1,7 @@
 package com.example.persistidorobjetos.examples;
 
+import java.util.List;
+
 import com.example.persistidorobjetos.annotations.Persistable;
 
 import lombok.Getter;
@@ -14,4 +16,7 @@ public class PersonaConObjetosComplejos {
 	private String nombre;
 	@Getter @Setter
 	private Auto auto;
+	@Getter @Setter
+	private List<String> tarjetasDeCredito; 
+	
 }

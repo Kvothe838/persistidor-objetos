@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 
@@ -53,9 +55,13 @@ public class PersistentObjectTest {
 	@Before
 	@Transactional
 	public void cleanDatabase(){
-		CriteriaBuilder criteriaBuilder = this.em.getCriteriaBuilder();
+		String hql = "DELETE FROM clase_atributos";
+	    Query q = this.em.createNativeQuery(hql);
+	    q.executeUpdate();
+	        
+	    CriteriaBuilder criteriaBuilder = this.em.getCriteriaBuilder();
 		
-		CriteriaDelete<Atributo> criteriaDeleteAtributo = criteriaBuilder.createCriteriaDelete(Atributo.class);
+	    CriteriaDelete<Atributo> criteriaDeleteAtributo = criteriaBuilder.createCriteriaDelete(Atributo.class);
 		criteriaDeleteAtributo.from(Atributo.class);
 		int rowsDeletedAtributo = this.em.createQuery(criteriaDeleteAtributo).executeUpdate();
 		System.out.println("Atributo entities deleted: " + rowsDeletedAtributo);
@@ -101,7 +107,7 @@ public class PersistentObjectTest {
 		}
 	}
 
-	@Test
+//	@Test
 	@Transactional
 	public void generateClaseWorks(){
 	  Clase clase = this.claseService.generateClaseObject(Persona1.class);
@@ -142,13 +148,13 @@ public class PersistentObjectTest {
 	
 	@Test
 	@Transactional
-//	@Commit
+	@Commit
 	public void saveClaseComplejaWorks() throws Exception {
 		this.persistentObject.store(1,new PersonaConObjetosComplejos());
 		Clase clase = claseService.getClaseByNombre(PersonaConObjetosComplejos.class.getName());
 		List<Atributo> atributos = clase.getAtributos();
 
-		assertEquals(3, atributos.size());
+		assertEquals(4, atributos.size());
 		assertTrue(atributos.stream().anyMatch(atributo ->
 			Objects.equals(atributo.getNombre(), "dni")
 				&& Objects.equals(atributo.getTipoAtributo().getNombre(), int.class.getName())
@@ -165,4 +171,6 @@ public class PersistentObjectTest {
 				&& atributo.getClase().getAtributos().size() == 2)
 		);
   	}
+	
+
 }
