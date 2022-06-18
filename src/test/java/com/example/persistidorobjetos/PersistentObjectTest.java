@@ -1,15 +1,7 @@
 package com.example.persistidorobjetos;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Session;
@@ -34,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class) 
@@ -136,5 +130,28 @@ public class PersistentObjectTest {
 		assertNotNull(session);
 		assertEquals(1, session.getId());
 		assertNotNull(session.getUltimoAcceso());
+	}
+
+	@Test
+	@Transactional
+	public void elapsedTimeWorks(){
+		Date now = new Date();
+		long sId = 1;
+
+		this.sessionService.saveSession(sId, now);
+
+		long elapsedTime = this.persistentObject.elapsedTime(sId);
+		System.out.printf("elapsed time: %d%n", elapsedTime);
+
+		assertNotEquals(-1, elapsedTime, "elapsedTime no debe ser -1 para session persistida");
+
+		// No se puede chequear igualdad ya que elapsedTime calcula el tiempo desde el último acceso hasta ahora (new Date()).
+		// Y no tenemos acceso a esa instancia de Date dentro de elapsedTime().
+		// Sin embargo, como es el tiempo en milisegundos y a nivel código no pasa casi nada desde la
+		// instanciación de now en este método hasta la comparación en elaspedTime(), se puede testear
+		// que sea menor a 1000 milisegundos ya que 1 segundo es muchísimo para esta diferencia de ejecuciones.
+
+		assertTrue(elapsedTime < 1000, "elapsedTime debe ser menor a un segundo");
+
 	}
 }

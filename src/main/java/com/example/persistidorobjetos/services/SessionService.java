@@ -15,11 +15,11 @@ public class SessionService {
     EntityManager em;
 
     @Transactional
-    public void saveSession(long sessionId){
+    public void saveSession(long sessionId, Date ultimoAcceso){
         Session session = new Session();
 
         session.setId(sessionId);
-        session.setUltimoAcceso(new Date());
+        session.setUltimoAcceso(ultimoAcceso);
 
         this.em.persist(session);
     }
@@ -29,8 +29,8 @@ public class SessionService {
     }
 
     @Transactional
-    public void updateSession(Session session){
-        session.setUltimoAcceso(new Date());
+    public void updateSession(Session session, Date ultimoAcceso){
+        session.setUltimoAcceso(ultimoAcceso);
 
         this.em.merge(session);
     }
@@ -38,11 +38,12 @@ public class SessionService {
     @Transactional
     public void saveOrUpdateSession(long sessionId){
         Session session = this.getSession(sessionId);
+        Date now = new Date();
 
         if(session == null){
-            this.saveSession(sessionId);
+            this.saveSession(sessionId, now);
         } else {
-            this.updateSession(session);
+            this.updateSession(session, now);
         }
     }
 }

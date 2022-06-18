@@ -1,7 +1,9 @@
 package com.example.persistidorobjetos;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 
+import com.example.persistidorobjetos.model.Session;
 import com.example.persistidorobjetos.services.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,7 +56,17 @@ public class PersistentObject
     // Retorna (en milisegundos) el tiempo transcurrido
     // desde el ultimo acceso registrado para la clave sId,
     // sin considerar las llamadas a este metodo ni a exists.
-    /*public long elapsedTime(long sId){ ... };*/
+    public long elapsedTime(long sId){
+		Session session = this.sessionService.getSession(sId);
+
+		if(session == null){
+			return -1;
+		}
+
+		Date now = new Date();
+
+		return now.getTime() - session.getUltimoAcceso().getTime();
+	};
     // retorna y elimina la instancia de clazz vinculada a la
     // clave sId, o retorna null si no existe dicha instancia
     /*public <T> T delete(long sId,Class<T> clazz){ ... };*/
