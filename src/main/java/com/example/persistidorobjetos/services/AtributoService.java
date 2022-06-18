@@ -1,18 +1,21 @@
 package com.example.persistidorobjetos.services;
 
-import com.example.persistidorobjetos.model.Atributo;
-import com.example.persistidorobjetos.model.TipoAtributo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.lang.reflect.Field;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.lang.reflect.Field;
-import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import com.example.persistidorobjetos.model.Atributo;
+import com.example.persistidorobjetos.model.Clase;
+import com.example.persistidorobjetos.model.TipoAtributo;
 
 @Service
 public class AtributoService {
@@ -20,13 +23,16 @@ public class AtributoService {
     private TipoAtributoService tipoAtributoService;
     @Autowired
     private EntityManager em;
+    @Autowired @Lazy
+    private ClaseService claseService;
 
-    public Atributo getAtributo(Field field){
+    public Atributo generateAtributoObject(Field field){
         Atributo atributo = new Atributo();
         atributo.setNombre(field.getName());
         TipoAtributo tipoAtributo = this.tipoAtributoService.getTipoAtributo(field.getType().getName());
         atributo.setTipoAtributo(tipoAtributo);
-
+        Clase clase = claseService.generateClaseObject(field.getType());
+        atributo.setClase(clase);
         return atributo;
     }
 

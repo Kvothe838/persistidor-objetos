@@ -25,27 +25,6 @@ public class Clase {
     private Long id;
     @Column(name="nombre")
     private String nombre;
-	@OneToMany(mappedBy = "clase", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Atributo> atributos;
-    
-    
-	/*public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}*/
-	public String getNombre() {
-		return nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	public List<Atributo> getAtributos() {
-		return atributos;
-	}
-	public void setAtributos(List<Atributo> atributos) {
-		this.atributos = atributos;
-	}
-    
 }

@@ -1,6 +1,7 @@
 package com.example.persistidorobjetos.services;
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,12 +26,15 @@ public class ClaseService {
     @Autowired
     private AtributoService atributoService;
 
+    @Transactional
     public Clase getClaseByNombre(String nombre) {
-        String hql = "SELECT c.id, c.nombre FROM Clase c WHERE c.nombre =:nombre";
-        Query q = this.em.createNativeQuery(hql, Clase.class);
+        String hql = "SELECT c.id FROM Clase c WHERE c.nombre =:nombre";
+        Query q = this.em.createNativeQuery(hql);
         q.setParameter("nombre", nombre);
         try{
-        	 return (Clase) q.getSingleResult();
+        	 Integer id = (Integer) q.getSingleResult();
+        	 Clase clase = em.find(Clase.class, new Long(id));
+        	 return clase;
         }catch(NoResultException e){
         	return null;
         }
@@ -39,25 +43,44 @@ public class ClaseService {
     @Transactional
     public void saveClase(Class<?> clazz){
         Clase nuevaClase = this.generateClaseObject(clazz);
-
         this.em.persist(nuevaClase);
     }
     
     public Clase generateClaseObject(Class<?> clazz){
-    	Clase clase = new Clase();
-    	clase.setNombre(clazz.getName());
-    	List<Atributo> atributos = new ArrayList<Atributo>();
-
-    	for(Field field : clazz.getDeclaredFields()){
-    		if(field.isAnnotationPresent(Persistable.class) ||
-    				(clazz.isAnnotationPresent(Persistable.class) && !field.isAnnotationPresent(NotPersistable.class))){
-    			Atributo atributo = this.atributoService.getAtributo(field);
-    			atributos.add(atributo);
+    	if(isClasePersistable(clazz)){
+    		Clase clase = new Clase();
+    		clase.setNombre(clazz.getName());
+    		
+    		List<Atributo> atributos = new ArrayList<Atributo>();
+    		for(Field field : clazz.getDeclaredFields()){
+    			if(field.isAnnotationPresent(Persistable.class) ||
+    					(clazz.isAnnotationPresent(Persistable.class) && !field.isAnnotationPresent(NotPersistable.class))){
+    				Atributo atributo = this.atributoService.generateAtributoObject(field);
+    				atributos.add(atributo);
+    			}
     		}
+    		clase.setAtributos(atributos);    		
+    		return clase;
     	}
-
-    	clase.setAtributos(atributos);
-
-    	return clase;
+    	return null;
     }
+    
+    public Boolean isClasePersistable(Class<?> clazz){
+    	if(clazz.isAnnotationPresent(Persistable.class))
+    		return true;
+    	for(Field field : clazz.getDeclaredFields()){
+    		if(field.isAnnotationPresent(Persistable.class))
+    			return true;
+    	}
+    	return false;
+    }
+    
+    public Boolean isClaseStored(Class<?> clazz){
+    	String hql = "SELECT COUNT(*) FROM Clase c WHERE c.nombre = :nombre";
+        Query q = this.em.createNativeQuery(hql);
+        q.setParameter("nombre", clazz.getName());
+        BigInteger result = (BigInteger) q.getSingleResult();
+        return result.intValue() == 1;
+    }
+    
 }

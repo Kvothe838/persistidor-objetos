@@ -6,34 +6,35 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import com.example.persistidorobjetos.model.Atributo;
-import com.example.persistidorobjetos.model.Session;
-import com.example.persistidorobjetos.model.TipoAtributo;
-import com.example.persistidorobjetos.services.AtributoService;
-import com.example.persistidorobjetos.services.SessionService;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.annotations.Persistable;
+import com.example.persistidorobjetos.examples.Auto;
 import com.example.persistidorobjetos.examples.Persona1;
 import com.example.persistidorobjetos.examples.Persona4;
 import com.example.persistidorobjetos.examples.Persona5;
+import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
+import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Clase;
+import com.example.persistidorobjetos.model.Session;
+import com.example.persistidorobjetos.model.TipoAtributo;
+import com.example.persistidorobjetos.services.AtributoService;
 import com.example.persistidorobjetos.services.ClaseService;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
+import com.example.persistidorobjetos.services.SessionService;
 
 @SpringBootTest
 @RunWith(SpringRunner.class) 
@@ -53,15 +54,16 @@ public class PersistentObjectTest {
 	@Transactional
 	public void cleanDatabase(){
 		CriteriaBuilder criteriaBuilder = this.em.getCriteriaBuilder();
-		CriteriaDelete<Clase> criteriaDeleteClase = criteriaBuilder.createCriteriaDelete(Clase.class);
-		criteriaDeleteClase.from(Clase.class);
-		int rowsDeletedClase = this.em.createQuery(criteriaDeleteClase).executeUpdate();
-		System.out.println("Clase entities deleted: " + rowsDeletedClase);
-
+		
 		CriteriaDelete<Atributo> criteriaDeleteAtributo = criteriaBuilder.createCriteriaDelete(Atributo.class);
 		criteriaDeleteAtributo.from(Atributo.class);
 		int rowsDeletedAtributo = this.em.createQuery(criteriaDeleteAtributo).executeUpdate();
 		System.out.println("Atributo entities deleted: " + rowsDeletedAtributo);
+		
+		CriteriaDelete<Clase> criteriaDeleteClase = criteriaBuilder.createCriteriaDelete(Clase.class);
+		criteriaDeleteClase.from(Clase.class);
+		int rowsDeletedClase = this.em.createQuery(criteriaDeleteClase).executeUpdate();
+		System.out.println("Clase entities deleted: " + rowsDeletedClase);
 
 		CriteriaDelete<TipoAtributo> criteriaDeleteTipoAtributo = criteriaBuilder.createCriteriaDelete(TipoAtributo.class);
 		criteriaDeleteTipoAtributo.from(TipoAtributo.class);
@@ -137,4 +139,30 @@ public class PersistentObjectTest {
 		assertEquals(1, session.getId());
 		assertNotNull(session.getUltimoAcceso());
 	}
+	
+	@Test
+	@Transactional
+//	@Commit
+	public void saveClaseComplejaWorks() throws Exception {
+		this.persistentObject.store(1,new PersonaConObjetosComplejos());
+		Clase clase = claseService.getClaseByNombre(PersonaConObjetosComplejos.class.getName());
+		List<Atributo> atributos = clase.getAtributos();
+
+		assertEquals(3, atributos.size());
+		assertTrue(atributos.stream().anyMatch(atributo ->
+			Objects.equals(atributo.getNombre(), "dni")
+				&& Objects.equals(atributo.getTipoAtributo().getNombre(), int.class.getName())
+			)
+		);
+		assertTrue(atributos.stream().anyMatch(atributo ->
+			Objects.equals(atributo.getNombre(), "nombre")
+					&& Objects.equals(atributo.getTipoAtributo().getNombre(), String.class.getName())
+			)
+		);
+		assertTrue(atributos.stream().anyMatch(atributo ->
+		Objects.equals(atributo.getNombre(), "auto")
+				&& Objects.equals(atributo.getTipoAtributo().getNombre(), Auto.class.getName())
+				&& atributo.getClase().getAtributos().size() == 2)
+		);
+  	}
 }

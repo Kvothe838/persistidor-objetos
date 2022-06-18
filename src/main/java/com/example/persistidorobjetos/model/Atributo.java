@@ -1,16 +1,23 @@
 package com.example.persistidorobjetos.model;
 
+import static javax.persistence.GenerationType.TABLE;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import javax.persistence.*;
-
-import static javax.persistence.GenerationType.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,34 +33,8 @@ public class Atributo {
     @ManyToOne
 	@Cascade(CascadeType.ALL)
     private TipoAtributo tipoAtributo;
-    @ManyToOne
+    @OneToOne(fetch = FetchType.EAGER)
+    @Cascade(CascadeType.ALL)
 	@JoinColumn(name = "clase_id")
     private Clase clase;
-    
-    
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getNombre() {
-		return nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	public TipoAtributo getTipoAtributo() {
-		return tipoAtributo;
-	}
-	public void setTipoAtributo(TipoAtributo tipoAtributo) {
-		this.tipoAtributo = tipoAtributo;
-	}
-	public Clase getClase() {
-		return clase;
-	}
-	public void setClase(Clase clase) {
-		this.clase = clase;
-	}
-	
 }

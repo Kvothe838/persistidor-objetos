@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import com.example.persistidorobjetos.services.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.annotations.Persistable;
 import com.example.persistidorobjetos.model.Clase;
@@ -24,27 +25,22 @@ public class PersistentObject
     // almacenara sera null.
     public boolean store(long sId, Object o) throws Exception {
     	Class<?> clazz = o.getClass();
-	    if(isPersistable(clazz)){
+	    if(claseService.isClasePersistable(clazz)){
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
 	
 	    	//se verifica la existencia de la clase en DB y se crea junto con sus atributos
-			this.claseService.saveClase(clazz);
-			this.sessionService.saveOrUpdateSession(sId);
+	    	if (claseService.isClaseStored(clazz)){
+	    		//TODO update de clase
+	    	}else{
+	    		this.claseService.saveClase(clazz);
+	    		this.sessionService.saveOrUpdateSession(sId);	    		
+	    	}
         }else{
 			throw new Exception("Clase no persistible");
         }
         return true;
     };
     
-    private Boolean isPersistable(Class<?> clazz){
-    	if(clazz.isAnnotationPresent(Persistable.class))
-    		return true;
-    	for(Field field : clazz.getDeclaredFields()){
-    		if(field.isAnnotationPresent(Persistable.class))
-    			return true;
-    	}
-    	return false;
-    }
     
     // Devuelve la instancia del objeto o asociada a la clave sId.
     /*public <T> T load(long sId,Class<T> clazz){ ... };*/
