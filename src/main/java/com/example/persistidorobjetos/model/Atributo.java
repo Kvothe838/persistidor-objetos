@@ -21,9 +21,9 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Entity
 @Table(name="atributo")
-@Data
 public class Atributo {
 	@Id
 	@GeneratedValue(strategy = TABLE)
