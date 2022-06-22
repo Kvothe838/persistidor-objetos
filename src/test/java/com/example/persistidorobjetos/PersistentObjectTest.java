@@ -78,27 +78,6 @@ public class PersistentObjectTest {
 		System.out.println("clase entities deleted: " + rowsDeleted);
 		rowsDeleted = querySession.executeUpdate();
 		System.out.println("session entities deleted: " + rowsDeleted);
-	    /*CriteriaBuilder criteriaBuilder = this.em.getCriteriaBuilder();
-		
-	    CriteriaDelete<Atributo> criteriaDeleteAtributo = criteriaBuilder.createCriteriaDelete(Atributo.class);
-		criteriaDeleteAtributo.from(Atributo.class);
-		int rowsDeletedAtributo = this.em.createQuery(criteriaDeleteAtributo).executeUpdate();
-		System.out.println("Atributo entities deleted: " + rowsDeletedAtributo);
-		
-		CriteriaDelete<Clase> criteriaDeleteClase = criteriaBuilder.createCriteriaDelete(Clase.class);
-		criteriaDeleteClase.from(Clase.class);
-		int rowsDeletedClase = this.em.createQuery(criteriaDeleteClase).executeUpdate();
-		System.out.println("Clase entities deleted: " + rowsDeletedClase);
-
-		CriteriaDelete<TipoAtributo> criteriaDeleteTipoAtributo = criteriaBuilder.createCriteriaDelete(TipoAtributo.class);
-		criteriaDeleteTipoAtributo.from(TipoAtributo.class);
-		int rowsDeletedTipoAtributo = this.em.createQuery(criteriaDeleteTipoAtributo).executeUpdate();
-		System.out.println("TipoAtributo entities deleted: " + rowsDeletedTipoAtributo);
-
-		CriteriaDelete<Session> criteriaDeleteSession = criteriaBuilder.createCriteriaDelete(Session.class);
-		criteriaDeleteSession.from(Session.class);
-		int rowsDeletedSession = this.em.createQuery(criteriaDeleteSession).executeUpdate();
-		System.out.println("Session entities deleted: " + rowsDeletedSession);*/
 	}
     
 //    @Test
