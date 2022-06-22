@@ -2,8 +2,8 @@ package com.example.persistidorobjetos.services;
 
 import java.lang.reflect.Field;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -82,6 +82,23 @@ public class ClaseService {
         q.setParameter("nombre", clazz.getName());
         BigInteger result = (BigInteger) q.getSingleResult();
         return result.intValue() == 1;
+    }
+
+    public void updateClase(Class<?> clazz){
+        Clase clasePersistida = this.getClaseByNombre(clazz.getName());
+        Clase nuevaClase = this.generateClaseObject(clazz);
+
+        List<Integer> idAtributosPersistidosOrdenados = clasePersistida.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
+        List<Integer> idAtributosNuevosOrdenados = nuevaClase.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
+
+        boolean sonAtributosIguales = idAtributosPersistidosOrdenados.equals(idAtributosNuevosOrdenados);
+
+        if(sonAtributosIguales){
+            return;
+        }
+
+        clasePersistida.setAtributos(nuevaClase.getAtributos());
+        this.em.merge(clasePersistida);
     }
     
 }

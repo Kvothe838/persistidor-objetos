@@ -1,9 +1,12 @@
 package com.example.persistidorobjetos.services;
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -27,12 +30,24 @@ public class AtributoService {
     private ClaseService claseService;
 
     public Atributo generateAtributoObject(Field field){
-        Atributo atributo = new Atributo();
-        atributo.setNombre(field.getName());
         TipoAtributo tipoAtributo = this.tipoAtributoService.getTipoAtributo(field.getType().getName());
-        atributo.setTipoAtributo(tipoAtributo);
-        Clase clase = claseService.generateClaseObject(field.getType());
+
+        Clase clase = this.claseService.getClaseByNombre(field.getType().getName());
+
+        if(clase == null){
+            clase = claseService.generateClaseObject(field.getType());
+        }
+
+        Atributo atributo = this.getAtributo(field.getName(), clase, tipoAtributo);
+
+        if(atributo == null){
+            atributo = new Atributo();
+            atributo.setNombre(field.getName());
+            atributo.setTipoAtributo(tipoAtributo);
+        }
+
         atributo.setClase(clase);
+
         return atributo;
     }
 
@@ -43,5 +58,28 @@ public class AtributoService {
         CriteriaQuery<Atributo> all = cq.select(rootEntry);
         TypedQuery<Atributo> allQuery = this.em.createQuery(all);
         return allQuery.getResultList();
+    }
+
+    private Atributo getAtributo(String nombre, Clase clase, TipoAtributo tipoAtributo){
+        String hql = "SELECT a.id, a.nombre, a.clase_id, a.tipo_atributo_id FROM Atributo a WHERE a.nombre =:nombre AND a.tipo_atributo_id =:tipoAtributoId";
+
+        if(clase != null){
+            hql += " AND a.clase_id =:claseId";
+        }
+
+        Query q = this.em.createNativeQuery(hql);
+        q.setParameter("nombre", nombre);
+        q.setParameter("tipoAtributoId", tipoAtributo.getId());
+
+        if(clase != null){
+            q.setParameter("claseId", clase.getId());
+        }
+
+        try{
+            Atributo atributo = (Atributo)q.getSingleResult();
+            return atributo;
+        }catch(NoResultException e){
+            return null;
+        }
     }
 }

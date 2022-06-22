@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,6 @@ import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Session;
-import com.example.persistidorobjetos.model.TipoAtributo;
 import com.example.persistidorobjetos.services.AtributoService;
 import com.example.persistidorobjetos.services.ClaseService;
 import com.example.persistidorobjetos.services.InstanciaService;
@@ -53,14 +53,32 @@ public class PersistentObjectTest {
 	@Autowired
 	InstanciaService instanciaService;
 
-//	@Before
+	@Before
 	@Transactional
+	@Commit
 	public void cleanDatabase(){
-		String hql = "DELETE FROM clase_atributos";
-	    Query q = this.em.createNativeQuery(hql);
-	    q.executeUpdate();
-	        
-	    CriteriaBuilder criteriaBuilder = this.em.getCriteriaBuilder();
+		Query queryValorAtributo = this.em.createNativeQuery("DELETE FROM valor_atributo");
+	    Query queryClaseAtributo = this.em.createNativeQuery("DELETE FROM atributo_instancia");
+		Query queryAtributo = this.em.createNativeQuery("DELETE FROM atributo");
+		Query queryTipoAtributo = this.em.createNativeQuery("DELETE FROM tipo_atributo");
+		Query queryInstancia = this.em.createNativeQuery("DELETE FROM instancia");
+		Query queryClase = this.em.createNativeQuery("DELETE FROM clase");
+		Query querySession = this.em.createNativeQuery("DELETE FROM session");
+		int rowsDeleted = queryValorAtributo.executeUpdate();
+		System.out.println("valor_atributo entities deleted: " + rowsDeleted);
+		rowsDeleted = queryClaseAtributo.executeUpdate();
+		System.out.println("clase_atributos entities deleted: " + rowsDeleted);
+		rowsDeleted = queryAtributo.executeUpdate();
+		System.out.println("atributo entities deleted: " + rowsDeleted);
+		rowsDeleted = queryTipoAtributo.executeUpdate();
+		System.out.println("tipo_atributo entities deleted: " + rowsDeleted);
+		rowsDeleted = queryInstancia.executeUpdate();
+		System.out.println("instancia entities deleted: " + rowsDeleted);
+		rowsDeleted = queryClase.executeUpdate();
+		System.out.println("clase entities deleted: " + rowsDeleted);
+		rowsDeleted = querySession.executeUpdate();
+		System.out.println("session entities deleted: " + rowsDeleted);
+	    /*CriteriaBuilder criteriaBuilder = this.em.getCriteriaBuilder();
 		
 	    CriteriaDelete<Atributo> criteriaDeleteAtributo = criteriaBuilder.createCriteriaDelete(Atributo.class);
 		criteriaDeleteAtributo.from(Atributo.class);
@@ -80,7 +98,7 @@ public class PersistentObjectTest {
 		CriteriaDelete<Session> criteriaDeleteSession = criteriaBuilder.createCriteriaDelete(Session.class);
 		criteriaDeleteSession.from(Session.class);
 		int rowsDeletedSession = this.em.createQuery(criteriaDeleteSession).executeUpdate();
-		System.out.println("Session entities deleted: " + rowsDeletedSession);
+		System.out.println("Session entities deleted: " + rowsDeletedSession);*/
 	}
     
 //    @Test
@@ -172,8 +190,13 @@ public class PersistentObjectTest {
 				&& atributo.getClase().getAtributos().size() == 2)
 		);
   	}
-	
-	
-	
 
+	@Test
+	@Transactional
+	@Commit
+	public void updateClaseWorks() throws Exception {
+		// Esto no es un test real, hay que hacerlo a mano. Correr este método, luego parar, cambiarle un atributo a Persona1 y
+		// volver a correr este método para finalmente chequear si se cambió el atributo correcto.
+		this.persistentObject.store(1, new PersonaConObjetosComplejos());
+	}
 }
