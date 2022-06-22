@@ -13,8 +13,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.persistidorobjetos.examples.Persona2;
+import com.example.persistidorobjetos.examples.Auto;
+import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Instancia;
 import com.example.persistidorobjetos.model.Session;
@@ -31,26 +33,34 @@ public class InstanciaServiceTest {
     ClaseService claseService;
 	
 	
-	@Test
+//	@Test
+//	@Transactional
 	public void test() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
-		Persona2 persona2 = new Persona2();
-		persona2.setDni(34334355);
-		persona2.setNombre("Juan Carlos");
+		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
+		persona.setDni(34334355);
+		persona.setNombre("Juan Carlos");
 		ArrayList<String> telefonos = new ArrayList<String>();
 		telefonos.add("15-4585-5454");
 		telefonos.add("15-1221-1221");
 		telefonos.add("15-6655-6655");
-		persona2.setTelefonos(telefonos);
+		persona.setTelefonos(telefonos);
+		Auto auto = new Auto();
+		auto.setMarca("Fiat");
+		auto.setModelo("600");
+		persona.setAuto(auto);
 		
-		Object object = persona2;
+		
+		Object object = persona;
 		PropertyDescriptor[] objDescriptors = PropertyUtils.getPropertyDescriptors(object);
 		for(PropertyDescriptor descriptor : objDescriptors){
 			Object property = PropertyUtils.getProperty(object, descriptor.getName());
 			System.out.println(String.valueOf(property));
 		}
 		
-		Clase clase = claseService.generateClaseObject(persona2.getClass());
+//		Clase clase = claseService.generateClaseObject(persona.getClass());
+		Clase clase = claseService.saveClase(persona.getClass());
 		Session session = new Session();
+		session.setId(1l);
 		Instancia instancia = instanciaService.generateInstancia(clase, object, session);
 		
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
@@ -62,9 +72,38 @@ public class InstanciaServiceTest {
 				&& Objects.equals(atributoInstancia.getValorAtributo().getValor(), "Juan Carlos"))
 		);
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "auto")
+				&& atributoInstancia.getValorAtributo().getInstancia() != null)
+		);
+		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
 				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos"))
 		);
 		
+		instanciaService.saveInstancia(instancia);
+		
+	}
+	
+	@Test
+	public void loadInstancia(){
+		Clase clase = claseService.getClaseByNombre(PersonaConObjetosComplejos.class.getName());
+		Instancia instancia = instanciaService.recoverInstancia(1, 1l);
+
+		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "dni")
+				&& Objects.equals(atributoInstancia.getValorAtributo().getValor(), "34334355"))
+		);
+		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "nombre")
+				&& Objects.equals(atributoInstancia.getValorAtributo().getValor(), "Juan Carlos"))
+		);
+		
+		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "auto")
+				&& atributoInstancia.getValorAtributo().getInstancia() != null)
+		);
+		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos"))
+		);
 	}
 	
 }

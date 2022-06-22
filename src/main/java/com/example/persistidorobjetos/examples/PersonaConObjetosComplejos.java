@@ -4,19 +4,15 @@ import java.util.List;
 
 import com.example.persistidorobjetos.annotations.Persistable;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
+@Data
 @Persistable
 public class PersonaConObjetosComplejos {
 
-	@Getter	@Setter
 	private int dni;
-	@Getter @Setter
 	private String nombre;
-	@Getter @Setter
 	private Auto auto;
-	@Getter @Setter
-	private List<String> tarjetasDeCredito; 
+	private List<String> telefonos; 
 	
 }

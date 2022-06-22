@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -146,7 +147,7 @@ public class PersistentObjectTest {
 		assertNotNull(session.getUltimoAcceso());
 	}
 	
-//	@Test
+	@Test
 	@Transactional
 	@Commit
 	public void saveClaseComplejaWorks() throws Exception {

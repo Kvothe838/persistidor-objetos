@@ -1,15 +1,19 @@
 package com.example.persistidorobjetos.services;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.AtributoInstancia;
@@ -32,8 +36,10 @@ public class InstanciaService {
 		List<AtributoInstancia> atributos = new ArrayList<>();
 		for(Atributo atributo : clase.getAtributos()){
 			Object objetoAtributo = PropertyUtils.getProperty(object, atributo.getNombre());
-			AtributoInstancia atributoInstancia = generateAtributoInstancia(atributo, instancia, objetoAtributo);
-			atributos.add(atributoInstancia);
+			if(objetoAtributo != null){
+				AtributoInstancia atributoInstancia = generateAtributoInstancia(atributo, instancia, objetoAtributo);
+				atributos.add(atributoInstancia);				
+			}
 		}
 		instancia.setAtributos(atributos);
 		return instancia;
@@ -53,10 +59,36 @@ public class InstanciaService {
 				valorAtributo.setValor(value);
 			}
 		}else{
-			generateInstancia(atributo.getClase(), object, null);
+			Instancia subInstancia = generateInstancia(atributo.getClase(), object, null);
+			valorAtributo.setInstancia(subInstancia);
 		}
 		atributoInstancia.setValorAtributo(valorAtributo);
 		return atributoInstancia;
+	}
+	
+	@Transactional
+	public void saveInstancia(Instancia instancia){
+		entityManager.persist(instancia);
+	}
+	
+	public Instancia recoverInstancia(Integer idInstancia, Long idSession){
+		String hql = "SELECT Count(*) FROM INSTANCIA i WHERE i.id = :idInstancia AND i.session_id = :idSession";
+        Query q = this.entityManager.createNativeQuery(hql);
+        q.setParameter("idInstancia", idInstancia);
+        q.setParameter("idSession", idSession);
+        try{
+        	BigInteger count = (BigInteger) q.getSingleResult();
+        	if(count.intValue() == 1){
+        		Instancia instancia = entityManager.find(Instancia.class, idInstancia);
+        		return instancia;        		
+        	}else{
+//        		TODO manejar caso de que no haya instancia con ese id y session id
+        		return null;
+        	}
+        }catch(NoResultException e){
+        	return null;
+        }
+//		entityManager.find(Instancia.class, idInstancia);
 	}
 	
 }

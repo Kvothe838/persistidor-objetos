@@ -32,18 +32,19 @@ public class ClaseService {
         Query q = this.em.createNativeQuery(hql);
         q.setParameter("nombre", nombre);
         try{
-        	 Integer id = (Integer) q.getSingleResult();
-        	 Clase clase = em.find(Clase.class, new Long(id));
-        	 return clase;
+        	BigInteger id = (BigInteger) q.getSingleResult();
+        	Clase clase = em.find(Clase.class, id.longValue());
+        	return clase;
         }catch(NoResultException e){
         	return null;
         }
     }
 
     @Transactional
-    public void saveClase(Class<?> clazz){
+    public Clase saveClase(Class<?> clazz){
         Clase nuevaClase = this.generateClaseObject(clazz);
         this.em.persist(nuevaClase);
+        return nuevaClase;
     }
     
     public Clase generateClaseObject(Class<?> clazz){
