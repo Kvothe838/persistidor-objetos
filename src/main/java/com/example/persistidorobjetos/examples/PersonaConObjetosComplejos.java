@@ -13,6 +13,7 @@ public class PersonaConObjetosComplejos {
 	private int dni;
 	private String nombre;
 	private Auto auto;
-	private List<String> telefonos; 
-	
+	private List<String> telefonos;
+//	private String nuevoAtributo
+;	
 }

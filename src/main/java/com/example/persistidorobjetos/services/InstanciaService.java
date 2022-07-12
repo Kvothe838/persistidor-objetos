@@ -71,15 +71,34 @@ public class InstanciaService {
 		entityManager.persist(instancia);
 	}
 	
-	public Instancia recoverInstancia(Integer idInstancia, Long idSession){
-		String hql = "SELECT Count(*) FROM INSTANCIA i WHERE i.id = :idInstancia AND i.session_id = :idSession";
+	@Transactional
+	public void deleteInstanciaByClaseAndSession(Long claseId, Long sessionId){
+		String hql = "SELECT i.id FROM INSTANCIA i WHERE i.clase_id = :claseId AND i.session_id = :sessionId";
+		Query q = this.entityManager.createNativeQuery(hql);
+        q.setParameter("claseId", claseId);
+        q.setParameter("sessionId", sessionId);
+        try{
+        	Integer instanciaId = (Integer) q.getSingleResult();
+        	if(instanciaId != null){
+        		Instancia instanciaBD = entityManager.find(Instancia.class, instanciaId);
+        		entityManager.remove(instanciaBD);
+        	}else{
+//        		TODO manejar caso de que no haya instancia con ese id y session id
+        	}
+        }catch(NoResultException e){
+//			TODO manejar excepcion
+        }
+	}
+	
+	public Instancia recoverInstancia(Integer instanciaId, Long sessionId){
+		String hql = "SELECT Count(*) FROM INSTANCIA i WHERE i.id = :instanciaId AND i.session_id = :sessionId";
         Query q = this.entityManager.createNativeQuery(hql);
-        q.setParameter("idInstancia", idInstancia);
-        q.setParameter("idSession", idSession);
+        q.setParameter("instanciaId", instanciaId);
+        q.setParameter("sessionId", sessionId);
         try{
         	BigInteger count = (BigInteger) q.getSingleResult();
         	if(count.intValue() == 1){
-        		Instancia instancia = entityManager.find(Instancia.class, idInstancia);
+        		Instancia instancia = entityManager.find(Instancia.class, instanciaId);
         		return instancia;        		
         	}else{
 //        		TODO manejar caso de que no haya instancia con ese id y session id
@@ -89,6 +108,26 @@ public class InstanciaService {
         	return null;
         }
 //		entityManager.find(Instancia.class, idInstancia);
+	}
+	
+	public Instancia getInstanciaByClaseAndSession(Long claseId, Long sessionId){
+		String hql = "SELECT i.id FROM INSTANCIA i WHERE i.clase_id = :claseId AND i.session_id = :sessionId";
+		Query q = this.entityManager.createNativeQuery(hql);
+        q.setParameter("claseId", claseId);
+        q.setParameter("sessionId", sessionId);
+        try{
+        	Integer instanciaId = (Integer) q.getSingleResult();
+        	if(instanciaId != null){
+        		Instancia instancia = entityManager.find(Instancia.class, instanciaId);
+        		return instancia;        		
+        	}else{
+//        		TODO manejar caso de que no haya instancia con ese id y session id
+        		return null;
+        	}
+        }catch(NoResultException e){
+//			TODO manejar excepcion
+        	return null;
+        }
 	}
 	
 }

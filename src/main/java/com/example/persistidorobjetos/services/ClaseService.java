@@ -25,6 +25,8 @@ public class ClaseService {
     
     @Autowired
     private AtributoService atributoService;
+    @Autowired 
+    private InstanciaService instanciaService;
 
     @Transactional
     public Clase getClaseByNombre(String nombre) {
@@ -83,5 +85,19 @@ public class ClaseService {
         BigInteger result = (BigInteger) q.getSingleResult();
         return result.intValue() == 1;
     }
+    
+
+    @Transactional
+	public Clase updateClase(Class<?> clazz){
+		Clase claseEnBD = getClaseByNombre(clazz.getName());
+		Clase claseNueva = generateClaseObject(clazz);
+		if(!claseEnBD.equals(claseNueva)){
+			claseEnBD.getAtributos().clear();
+			claseEnBD.getAtributos().addAll(claseNueva.getAtributos());
+			em.merge(claseEnBD);
+		}
+		return claseEnBD;
+    }
+
     
 }

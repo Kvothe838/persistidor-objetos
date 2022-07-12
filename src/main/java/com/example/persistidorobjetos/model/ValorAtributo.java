@@ -20,16 +20,19 @@ import org.hibernate.annotations.FetchMode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Data
 @Entity
 @Table(name="valor_atributo")
 public class ValorAtributo {
     @Id
     @GeneratedValue(strategy = TABLE)
+    @EqualsAndHashCode.Exclude
     private int id;
 //    @ManyToOne
 //    private AtributoInstancia atributoInstancia;

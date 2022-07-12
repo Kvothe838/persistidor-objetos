@@ -17,16 +17,19 @@ import org.hibernate.annotations.CascadeType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Data
 @Entity
 @Table(name="atributo")
 public class Atributo {
 	@Id
 	@GeneratedValue(strategy = TABLE)
+	@EqualsAndHashCode.Exclude
     private int id;
     @Column(name="nombre")
     private String nombre;

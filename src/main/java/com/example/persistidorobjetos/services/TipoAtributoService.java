@@ -21,7 +21,7 @@ public class TipoAtributoService {
         if(tipoAtributo == null){
             tipoAtributo = new TipoAtributo();
             tipoAtributo.setNombre(nombreTipoAtributo);
-
+            em.persist(tipoAtributo);
         }
 
         return tipoAtributo;
