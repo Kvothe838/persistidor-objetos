@@ -2,6 +2,9 @@ package com.example.persistidorobjetos;
 
 import java.lang.reflect.Field;
 
+import com.example.persistidorobjetos.model.Instancia;
+import com.example.persistidorobjetos.model.Session;
+import com.example.persistidorobjetos.services.InstanciaService;
 import com.example.persistidorobjetos.services.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +21,8 @@ public class PersistentObject
     private ClaseService claseService;
 	@Autowired
 	private SessionService sessionService;
+	@Autowired
+	private InstanciaService instanciaService;
     // Almacena la instancia del objeto o asociada a la clave sId,
     // o actualiza la instancia existente retornando true o false
     // segun actualiza o almacena.
@@ -25,6 +30,21 @@ public class PersistentObject
     // almacenara sera null.
     public boolean store(long sId, Object o) throws Exception {
     	Class<?> clazz = o.getClass();
+		boolean result;
+
+		Instancia instanciaExistente = this.instanciaService.recoverInstancia(o.hashCode(), sId);
+
+		if(instanciaExistente != null){
+			this.claseService.updateClase(clazz);
+
+			Clase clase = this.claseService.getClase(clazz);
+			Session session = this.sessionService.getSession(sId);
+
+			this.instanciaService.updateInstancia(clase, o, session);
+
+			return true;
+		}
+
 	    if(this.claseService.isClasePersistable(clazz)){
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
 	
@@ -32,13 +52,21 @@ public class PersistentObject
 	    	if (this.claseService.isClaseStored(clazz)){
 	    		this.claseService.updateClase(clazz);
 
-				return true;
+				result = true;
 	    	}else{
 	    		this.claseService.saveClase(clazz);
 	    		this.sessionService.saveOrUpdateSession(sId);
 
-				return false;
+				result = false;
 	    	}
+
+			Clase clase = this.claseService.getClase(clazz);
+			Session session = this.sessionService.getSession(sId);
+			Instancia instancia = this.instanciaService.generateInstancia(clase, o, session);
+
+			this.instanciaService.saveInstancia(instancia);
+
+			return result;
         }else{
 			throw new Exception("Clase no persistible");
         }

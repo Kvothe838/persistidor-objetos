@@ -11,8 +11,6 @@ import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
 
 import org.junit.Before;
 import org.junit.Test;

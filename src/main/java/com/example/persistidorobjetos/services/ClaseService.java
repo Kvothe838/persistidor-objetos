@@ -85,7 +85,7 @@ public class ClaseService {
     }
 
     public void updateClase(Class<?> clazz){
-        Clase clasePersistida = this.getClaseByNombre(clazz.getName());
+        Clase clasePersistida = this.getClase(clazz);
         Clase nuevaClase = this.generateClaseObject(clazz);
 
         List<Integer> idAtributosPersistidosOrdenados = clasePersistida.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
@@ -100,5 +100,8 @@ public class ClaseService {
         clasePersistida.setAtributos(nuevaClase.getAtributos());
         this.em.merge(clasePersistida);
     }
-    
+
+    public Clase getClase(Class<?> clazz){
+        return this.getClaseByNombre(clazz.getName());
+    }
 }

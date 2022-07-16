@@ -90,5 +90,11 @@ public class InstanciaService {
         }
 //		entityManager.find(Instancia.class, idInstancia);
 	}
+
+	public void updateInstancia(Clase clase, Object o, Session session) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+		Instancia nuevaInstancia = this.generateInstancia(clase, o, session);
+		nuevaInstancia.setId(o.hashCode());
+		this.entityManager.merge(nuevaInstancia);
+	}
 	
 }
