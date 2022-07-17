@@ -32,7 +32,7 @@ public class ClaseService {
         Query q = this.em.createNativeQuery(hql);
         q.setParameter("nombre", nombre);
         try{
-        	BigInteger id = (BigInteger) q.getSingleResult();
+        	Integer id = (Integer) q.getSingleResult();
         	Clase clase = em.find(Clase.class, id.longValue());
         	return clase;
         }catch(NoResultException e){

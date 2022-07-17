@@ -55,6 +55,7 @@ public class PersistentObjectTest {
 	@Transactional
 	@Commit
 	public void cleanDatabase(){
+		Query queryAtributoInstancia = this.em.createNativeQuery("DELETE FROM atributo_instancia");
 		Query queryValorAtributo = this.em.createNativeQuery("DELETE FROM valor_atributo");
 	    Query queryClaseAtributo = this.em.createNativeQuery("DELETE FROM atributo_instancia");
 		Query queryAtributo = this.em.createNativeQuery("DELETE FROM atributo");
@@ -62,7 +63,9 @@ public class PersistentObjectTest {
 		Query queryInstancia = this.em.createNativeQuery("DELETE FROM instancia");
 		Query queryClase = this.em.createNativeQuery("DELETE FROM clase");
 		Query querySession = this.em.createNativeQuery("DELETE FROM session");
-		int rowsDeleted = queryValorAtributo.executeUpdate();
+		int rowsDeleted = queryAtributoInstancia.executeUpdate();
+		System.out.println("atributo_instancia entities deleted: " + rowsDeleted);
+		rowsDeleted = queryValorAtributo.executeUpdate();
 		System.out.println("valor_atributo entities deleted: " + rowsDeleted);
 		rowsDeleted = queryClaseAtributo.executeUpdate();
 		System.out.println("clase_atributos entities deleted: " + rowsDeleted);
