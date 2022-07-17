@@ -11,20 +11,23 @@ import org.hibernate.annotations.FetchMode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Data
 @Entity
 @Table(name="instancia")
 public class Instancia {
     @Id
     @GeneratedValue(strategy = TABLE)
-    private int id;
+    @EqualsAndHashCode.Exclude
+    private Integer id;
     @ManyToOne
     private Clase clase;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Session session;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)

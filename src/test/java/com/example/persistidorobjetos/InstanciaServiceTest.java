@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.examples.Auto;
 import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
@@ -22,6 +21,7 @@ import com.example.persistidorobjetos.model.Instancia;
 import com.example.persistidorobjetos.model.Session;
 import com.example.persistidorobjetos.services.ClaseService;
 import com.example.persistidorobjetos.services.InstanciaService;
+import com.example.persistidorobjetos.services.SessionService;
 
 @SpringBootTest
 @RunWith(SpringRunner.class) 
@@ -31,6 +31,8 @@ public class InstanciaServiceTest {
 	InstanciaService instanciaService;
 	@Autowired
     ClaseService claseService;
+	@Autowired
+	SessionService sessionService;
 	
 	
 //	@Test
@@ -49,6 +51,8 @@ public class InstanciaServiceTest {
 		auto.setModelo("600");
 		persona.setAuto(auto);
 		
+		this.sessionService.saveOrUpdateSession(1l);
+		Session session = sessionService.getSession(1l);
 		
 		Object object = persona;
 		PropertyDescriptor[] objDescriptors = PropertyUtils.getPropertyDescriptors(object);
@@ -57,10 +61,13 @@ public class InstanciaServiceTest {
 			System.out.println(String.valueOf(property));
 		}
 		
-//		Clase clase = claseService.generateClaseObject(persona.getClass());
-		Clase clase = claseService.saveClase(persona.getClass());
-		Session session = new Session();
-		session.setId(1l);
+		Clase clase;
+		if(claseService.isClaseStored(persona.getClass())){
+			clase = claseService.updateClase(persona.getClass());
+		}else{
+			clase = claseService.generateClaseObject(persona.getClass());
+			clase = claseService.saveClase(persona.getClass());
+		}
 		Instancia instancia = instanciaService.generateInstancia(clase, object, session);
 		
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
@@ -76,8 +83,8 @@ public class InstanciaServiceTest {
 				&& atributoInstancia.getValorAtributo().getInstancia() != null)
 		);
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
-				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos"))
-		);
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos")
+				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));
 		
 		instanciaService.saveInstancia(instancia);
 		
@@ -85,7 +92,6 @@ public class InstanciaServiceTest {
 	
 	@Test
 	public void loadInstancia(){
-		Clase clase = claseService.getClaseByNombre(PersonaConObjetosComplejos.class.getName());
 		Instancia instancia = instanciaService.recoverInstancia(1, 1l);
 
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
@@ -102,8 +108,8 @@ public class InstanciaServiceTest {
 				&& atributoInstancia.getValorAtributo().getInstancia() != null)
 		);
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
-				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos"))
-		);
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos")
+				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));
 	}
 	
 }

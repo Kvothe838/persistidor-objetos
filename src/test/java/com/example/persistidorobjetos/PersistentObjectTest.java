@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -145,7 +146,7 @@ public class PersistentObjectTest {
 		assertNotNull(session.getUltimoAcceso());
 	}
 	
-	@Test
+//	@Test
 	@Transactional
 	@Commit
 	public void saveClaseComplejaWorks() throws Exception {
@@ -170,6 +171,25 @@ public class PersistentObjectTest {
 				&& atributo.getClase().getAtributos().size() == 2)
 		);
   	}
+	
+	
+	@Test
+	public void storeTest() throws Exception{
+		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
+		persona.setDni(34334355);
+		persona.setNombre("Juan Carlos");
+		ArrayList<String> telefonos = new ArrayList<String>();
+		telefonos.add("15-4585-5454");
+		telefonos.add("15-1221-1221");
+		telefonos.add("15-6655-6655");
+		persona.setTelefonos(telefonos);
+		Auto auto = new Auto();
+		auto.setMarca("Fiat");
+		auto.setModelo("600");
+		persona.setAuto(auto);
+		
+		assertTrue(persistentObject.store(1, persona));
+	}
 
 	@Test
 	@Transactional

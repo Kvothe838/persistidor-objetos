@@ -6,17 +6,20 @@ import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@Data
 @Entity
 @Table(name="atributo_instancia")
-@Data
 public class AtributoInstancia {
     @Id
     @GeneratedValue(strategy = TABLE)
-    private int id;
+    @EqualsAndHashCode.Exclude
+    private Integer id;
     @ManyToOne
     private Atributo atributo;
     @ManyToOne

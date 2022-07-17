@@ -20,21 +20,24 @@ import org.hibernate.annotations.FetchMode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Data
 @Entity
 @Table(name="valor_atributo")
 public class ValorAtributo {
     @Id
     @GeneratedValue(strategy = TABLE)
-    private int id;
+    @EqualsAndHashCode.Exclude
+    private Integer id;
 //    @ManyToOne
 //    private AtributoInstancia atributoInstancia;
     //para collections
-    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<ValorAtributo> valorAtributoList;
     //para datos basicos
@@ -42,6 +45,5 @@ public class ValorAtributo {
     private String valor;
     //para objetos complejos
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "instancia_id")
     private Instancia instancia;
 }
