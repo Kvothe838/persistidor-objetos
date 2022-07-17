@@ -20,7 +20,7 @@ public class TipoAtributo {
     @Id
     @GeneratedValue(strategy = TABLE)
     @EqualsAndHashCode.Exclude
-    private int id;
+    private Integer id;
     @Column(name="nombre")
     private String nombre;
 }

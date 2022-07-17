@@ -87,6 +87,7 @@ public class ClaseService {
         return result.intValue() == 1;
     }
 
+//		TODO no se estan borrando las instancias antes de hacer el merge de las clases, va a tirar conflicto 
 //    public void updateClase(Class<?> clazz){
 //        Clase clasePersistida = this.getClaseByNombre(clazz.getName());
 //        Clase nuevaClase = this.generateClaseObject(clazz);

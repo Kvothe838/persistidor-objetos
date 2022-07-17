@@ -9,12 +9,10 @@ import java.util.Objects;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.examples.Auto;
 import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
@@ -37,8 +35,7 @@ public class InstanciaServiceTest {
 	SessionService sessionService;
 	
 	
-	@Test
-//	@D
+//	@Test
 //	@Transactional
 	public void test() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
@@ -56,7 +53,6 @@ public class InstanciaServiceTest {
 		
 		this.sessionService.saveOrUpdateSession(1l);
 		Session session = sessionService.getSession(1l);
-		
 		
 		Object object = persona;
 		PropertyDescriptor[] objDescriptors = PropertyUtils.getPropertyDescriptors(object);
@@ -87,17 +83,16 @@ public class InstanciaServiceTest {
 				&& atributoInstancia.getValorAtributo().getInstancia() != null)
 		);
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
-				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos"))
-		);
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos")
+				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));
 		
 		instanciaService.saveInstancia(instancia);
 		
 	}
 	
-//	@Test
+	@Test
 	public void loadInstancia(){
-		Clase clase = claseService.getClaseByNombre(PersonaConObjetosComplejos.class.getName());
-		Instancia instancia = instanciaService.recoverInstancia(32768, 1l);
+		Instancia instancia = instanciaService.recoverInstancia(1, 1l);
 
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
 				Objects.equals(atributoInstancia.getAtributo().getNombre(), "dni")
@@ -113,10 +108,8 @@ public class InstanciaServiceTest {
 				&& atributoInstancia.getValorAtributo().getInstancia() != null)
 		);
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
-				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos"))
-		);
+				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos")
+				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));
 	}
-	
-	
 	
 }

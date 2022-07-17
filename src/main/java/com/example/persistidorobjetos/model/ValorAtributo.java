@@ -33,11 +33,11 @@ public class ValorAtributo {
     @Id
     @GeneratedValue(strategy = TABLE)
     @EqualsAndHashCode.Exclude
-    private int id;
+    private Integer id;
 //    @ManyToOne
 //    private AtributoInstancia atributoInstancia;
     //para collections
-    @OneToMany(mappedBy = "id",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<ValorAtributo> valorAtributoList;
     //para datos basicos
@@ -45,6 +45,5 @@ public class ValorAtributo {
     private String valor;
     //para objetos complejos
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "instancia_id")
     private Instancia instancia;
 }

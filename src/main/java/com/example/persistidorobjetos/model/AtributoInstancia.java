@@ -26,7 +26,7 @@ public class AtributoInstancia {
     @Id
     @GeneratedValue(strategy = TABLE)
     @EqualsAndHashCode.Exclude
-    private int id;
+    private Integer id;
     @ManyToOne
     private Atributo atributo;
     @ManyToOne

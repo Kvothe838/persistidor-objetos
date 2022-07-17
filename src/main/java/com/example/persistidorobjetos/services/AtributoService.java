@@ -33,17 +33,18 @@ public class AtributoService {
     public Atributo generateAtributoObject(Field field){
         TipoAtributo tipoAtributo = this.tipoAtributoService.getTipoAtributo(field.getType().getName());
 
-        if(field.getClass().equals(ArrayList.class)){
+        Clase clase;
+        //TODO con los demas tipos de collections
+        if(field.getType().equals(ArrayList.class)){
         	Class<?> innerClazz = (Class) ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
-        	int i = 1+1;
+        	//TODO consultar que pasa si la clase dentro del array no es persistible
+        	clase = claseService.generateClaseObject(innerClazz);
+        }else{
+        	clase = this.claseService.getClaseByNombre(field.getType().getName());
+        	if(clase == null){
+        		clase = claseService.generateClaseObject(field.getType());
+        	}        	
         }
-        
-        Clase clase = this.claseService.getClaseByNombre(field.getType().getName());
-        if(clase == null){
-            clase = claseService.generateClaseObject(field.getType());
-        }
-        
-        
 
 //        Atributo atributo = this.getAtributo(field.getName(), clase, tipoAtributo);
 
