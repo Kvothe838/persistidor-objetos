@@ -9,6 +9,7 @@ import java.util.Objects;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ import com.example.persistidorobjetos.model.Instancia;
 import com.example.persistidorobjetos.model.Session;
 import com.example.persistidorobjetos.services.ClaseService;
 import com.example.persistidorobjetos.services.InstanciaService;
+import com.example.persistidorobjetos.services.SessionService;
 
 @SpringBootTest
 @RunWith(SpringRunner.class) 
@@ -31,9 +33,12 @@ public class InstanciaServiceTest {
 	InstanciaService instanciaService;
 	@Autowired
     ClaseService claseService;
+	@Autowired
+	SessionService sessionService;
 	
 	
-//	@Test
+	@Test
+//	@D
 //	@Transactional
 	public void test() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
@@ -49,6 +54,9 @@ public class InstanciaServiceTest {
 		auto.setModelo("600");
 		persona.setAuto(auto);
 		
+		this.sessionService.saveOrUpdateSession(1l);
+		Session session = sessionService.getSession(1l);
+		
 		
 		Object object = persona;
 		PropertyDescriptor[] objDescriptors = PropertyUtils.getPropertyDescriptors(object);
@@ -57,10 +65,13 @@ public class InstanciaServiceTest {
 			System.out.println(String.valueOf(property));
 		}
 		
-//		Clase clase = claseService.generateClaseObject(persona.getClass());
-		Clase clase = claseService.saveClase(persona.getClass());
-		Session session = new Session();
-		session.setId(1l);
+		Clase clase;
+		if(claseService.isClaseStored(persona.getClass())){
+			clase = claseService.updateClase(persona.getClass());
+		}else{
+			clase = claseService.generateClaseObject(persona.getClass());
+			clase = claseService.saveClase(persona.getClass());
+		}
 		Instancia instancia = instanciaService.generateInstancia(clase, object, session);
 		
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
@@ -83,10 +94,10 @@ public class InstanciaServiceTest {
 		
 	}
 	
-	@Test
+//	@Test
 	public void loadInstancia(){
 		Clase clase = claseService.getClaseByNombre(PersonaConObjetosComplejos.class.getName());
-		Instancia instancia = instanciaService.recoverInstancia(1, 1l);
+		Instancia instancia = instanciaService.recoverInstancia(32768, 1l);
 
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
 				Objects.equals(atributoInstancia.getAtributo().getNombre(), "dni")

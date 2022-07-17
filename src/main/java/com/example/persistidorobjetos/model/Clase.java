@@ -28,7 +28,6 @@ public class Clase {
     @Column(name="nombre")
     private String nombre;
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    @JoinColumn(name="clase_perteneciente_id")
     private List<Atributo> atributos;
 	
 	

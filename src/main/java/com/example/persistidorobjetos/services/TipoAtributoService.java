@@ -4,6 +4,7 @@ import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.TipoAtributo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -15,6 +16,7 @@ public class TipoAtributoService {
     @Autowired
     private EntityManager em;
 
+    @Transactional
     public TipoAtributo getTipoAtributo(String nombreTipoAtributo){
         TipoAtributo tipoAtributo = this.getTipoAtributoByNombre(nombreTipoAtributo);
 

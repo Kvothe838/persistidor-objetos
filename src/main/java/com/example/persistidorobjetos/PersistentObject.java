@@ -27,6 +27,21 @@ public class PersistentObject
     // almacenara sera null.
     public boolean store(long sId, Object o) throws Exception {
     	Class<?> clazz = o.getClass();
+		boolean result;
+
+		Instancia instanciaExistente = this.instanciaService.recoverInstancia(o.hashCode(), sId);
+
+		if(instanciaExistente != null){
+			this.claseService.updateClase(clazz);
+
+			Clase clase = this.claseService.getClase(clazz);
+			Session session = this.sessionService.getSession(sId);
+
+			this.instanciaService.updateInstancia(clase, o, session);
+
+			return true;
+		}
+
 	    if(this.claseService.isClasePersistable(clazz)){
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
 	    	//se verifica la existencia de la clase en DB y se crea junto con sus atributos

@@ -1,7 +1,8 @@
 package com.example.persistidorobjetos.services;
 
 import java.lang.reflect.Field;
-import java.math.BigInteger;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -32,19 +33,25 @@ public class AtributoService {
     public Atributo generateAtributoObject(Field field){
         TipoAtributo tipoAtributo = this.tipoAtributoService.getTipoAtributo(field.getType().getName());
 
+        if(field.getClass().equals(ArrayList.class)){
+        	Class<?> innerClazz = (Class) ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
+        	int i = 1+1;
+        }
+        
         Clase clase = this.claseService.getClaseByNombre(field.getType().getName());
-
         if(clase == null){
             clase = claseService.generateClaseObject(field.getType());
         }
+        
+        
 
-        Atributo atributo = this.getAtributo(field.getName(), clase, tipoAtributo);
+//        Atributo atributo = this.getAtributo(field.getName(), clase, tipoAtributo);
 
-        if(atributo == null){
-            atributo = new Atributo();
+//        if(atributo == null){
+        	Atributo atributo = new Atributo();
             atributo.setNombre(field.getName());
             atributo.setTipoAtributo(tipoAtributo);
-        }
+//        }
 
         atributo.setClase(clase);
 

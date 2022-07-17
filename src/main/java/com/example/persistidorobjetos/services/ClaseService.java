@@ -117,6 +117,10 @@ public class ClaseService {
 		}
 		return claseEnBD;
     }
+
+    public Clase getClase(Class<?> clazz){
+        return this.getClaseByNombre(clazz.getName());
+    }
     
     private void deleteInstanciasOfClase(Class<?> clazz){
     	String hql = "SELECT i.id FROM instancia i inner join clase c on i.clase_id = c.id WHERE c.nombre =:clase";
