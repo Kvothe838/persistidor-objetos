@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -53,6 +54,15 @@ public class InstanciaService {
 		ValorAtributo valorAtributo = new ValorAtributo();
 		if(atributo.getClase() == null){
 			if(object instanceof Collection<?>){
+				if(object instanceof ArrayList<?> || object instanceof HashSet<?>){
+					valorAtributo.setValorAtributoList(new ArrayList<>());
+					List objects = (ArrayList) object;
+					Object firstObject = objects.get(0);
+					
+					for(Object o : objects){
+						
+					}
+				}
 				//TODO manejo de listas y esas cosas
 			}else{
 				String value = String.valueOf(object);
@@ -68,6 +78,10 @@ public class InstanciaService {
 	
 	@Transactional
 	public void saveInstancia(Instancia instancia){
+		Instancia instanciaVieja = getInstanciaByClaseAndSession(instancia.getClase().getId(), instancia.getSession().getId());
+		if(instanciaVieja != null){
+			entityManager.remove(instanciaVieja);
+		}
 		entityManager.persist(instancia);
 	}
 	

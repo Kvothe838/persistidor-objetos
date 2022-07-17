@@ -2,8 +2,8 @@ package com.example.persistidorobjetos.services;
 
 import java.lang.reflect.Field;
 import java.math.BigInteger;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -17,6 +17,7 @@ import com.example.persistidorobjetos.annotations.NotPersistable;
 import com.example.persistidorobjetos.annotations.Persistable;
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Clase;
+import com.example.persistidorobjetos.model.Instancia;
 
 @Service
 public class ClaseService {
@@ -86,22 +87,22 @@ public class ClaseService {
         return result.intValue() == 1;
     }
 
-    public void updateClase(Class<?> clazz){
-        Clase clasePersistida = this.getClaseByNombre(clazz.getName());
-        Clase nuevaClase = this.generateClaseObject(clazz);
-
-        List<Integer> idAtributosPersistidosOrdenados = clasePersistida.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
-        List<Integer> idAtributosNuevosOrdenados = nuevaClase.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
-
-        boolean sonAtributosIguales = idAtributosPersistidosOrdenados.equals(idAtributosNuevosOrdenados);
-
-        if(sonAtributosIguales){
-            return;
-        }
-
-        clasePersistida.setAtributos(nuevaClase.getAtributos());
-        this.em.merge(clasePersistida);
-    }
+//    public void updateClase(Class<?> clazz){
+//        Clase clasePersistida = this.getClaseByNombre(clazz.getName());
+//        Clase nuevaClase = this.generateClaseObject(clazz);
+//
+//        List<Integer> idAtributosPersistidosOrdenados = clasePersistida.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
+//        List<Integer> idAtributosNuevosOrdenados = nuevaClase.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
+//
+//        boolean sonAtributosIguales = idAtributosPersistidosOrdenados.equals(idAtributosNuevosOrdenados);
+//
+//        if(sonAtributosIguales){
+//            return;
+//        }
+//
+//        clasePersistida.setAtributos(nuevaClase.getAtributos());
+//        this.em.merge(clasePersistida);
+//    }
     
 
     @Transactional
@@ -111,9 +112,21 @@ public class ClaseService {
 		if(!claseEnBD.equals(claseNueva)){
 			claseEnBD.getAtributos().clear();
 			claseEnBD.getAtributos().addAll(claseNueva.getAtributos());
+			deleteInstanciasOfClase(clazz);
 			em.merge(claseEnBD);
 		}
 		return claseEnBD;
+    }
+    
+    private void deleteInstanciasOfClase(Class<?> clazz){
+    	String hql = "SELECT i.id FROM instancia i inner join clase c on i.clase_id = c.id WHERE c.nombre =:clase";
+        Query q = this.em.createNativeQuery(hql);
+        q.setParameter("clase", clazz.getName());
+		List<Integer> idsInstancias = (List<Integer>) q.getResultList();
+		for(Integer idInstancia : idsInstancias){
+			Instancia instancia = em.find(Instancia.class, idInstancia);
+			em.remove(instancia);
+		}
     }
 
     
