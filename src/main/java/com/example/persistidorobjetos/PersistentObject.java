@@ -1,14 +1,14 @@
 package com.example.persistidorobjetos;
 
-import java.lang.reflect.Field;
-
-import com.example.persistidorobjetos.services.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.persistidorobjetos.annotations.Persistable;
 import com.example.persistidorobjetos.model.Clase;
+import com.example.persistidorobjetos.model.Instancia;
+import com.example.persistidorobjetos.model.Session;
 import com.example.persistidorobjetos.services.ClaseService;
+import com.example.persistidorobjetos.services.InstanciaService;
+import com.example.persistidorobjetos.services.SessionService;
 
 @Component
 public class PersistentObject
@@ -17,6 +17,9 @@ public class PersistentObject
     private ClaseService claseService;
 	@Autowired
 	private SessionService sessionService;
+	@Autowired
+	private InstanciaService instanciaService;
+	
     // Almacena la instancia del objeto o asociada a la clave sId,
     // o actualiza la instancia existente retornando true o false
     // segun actualiza o almacena.
@@ -24,27 +27,40 @@ public class PersistentObject
     // almacenara sera null.
     public boolean store(long sId, Object o) throws Exception {
     	Class<?> clazz = o.getClass();
-	    if(isPersistable(clazz)){
+		boolean result;
+
+		Instancia instanciaExistente = this.instanciaService.recoverInstancia(o.hashCode(), sId);
+
+		if(instanciaExistente != null){
+			this.claseService.updateClase(clazz);
+
+			Clase clase = this.claseService.getClase(clazz);
+			Session session = this.sessionService.getSession(sId);
+
+			this.instanciaService.updateInstancia(clase, o, session);
+
+			return true;
+		}
+
+	    if(this.claseService.isClasePersistable(clazz)){
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
-	
 	    	//se verifica la existencia de la clase en DB y se crea junto con sus atributos
-			this.claseService.saveClase(clazz);
-			this.sessionService.saveOrUpdateSession(sId);
+	    	Clase clase;
+	    	if (claseService.isClaseStored(clazz)){
+	    		clase = claseService.updateClase(clazz);	
+	    	}else{
+	    		clase = this.claseService.saveClase(clazz);
+	    		this.sessionService.saveOrUpdateSession(sId);	    		
+	    	}
+	    	Session session = sessionService.getSession(sId);
+	    	Instancia instancia = instanciaService.generateInstancia(clase, o, session);
+	    	instanciaService.saveInstancia(instancia);
         }else{
 			throw new Exception("Clase no persistible");
         }
-        return true;
+	    return true;
     };
     
-    private Boolean isPersistable(Class<?> clazz){
-    	if(clazz.isAnnotationPresent(Persistable.class))
-    		return true;
-    	for(Field field : clazz.getDeclaredFields()){
-    		if(field.isAnnotationPresent(Persistable.class))
-    			return true;
-    	}
-    	return false;
-    }
     
     // Devuelve la instancia del objeto o asociada a la clave sId.
     /*public <T> T load(long sId,Class<T> clazz){ ... };*/
