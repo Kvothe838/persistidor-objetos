@@ -31,6 +31,8 @@ public class InstanciaService {
 	private EntityManager entityManager;
 	@Autowired
 	private ClaseService claseService;
+	@Autowired
+	private GenericService genericService;
 	
 	public Instancia generateInstancia(Clase clase, Object object, Session session) 
 				throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
@@ -171,7 +173,7 @@ public class InstanciaService {
         }
 	}
 	
-	public Object loadObject(long sId,Class<?> clazz) throws StructureChangedException, InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
+	public Object loadObject(long sId,Class<?> clazz) throws Exception {
 		//compruebo que la clase este en BD y sea la misma
 		if(claseService.isClaseStored(clazz)){
 			Clase claseBD = claseService.getClase(clazz);
@@ -189,15 +191,25 @@ public class InstanciaService {
 	}
 
 	private Object loadObjectFromInstancia(Class<?> clazz, Instancia instancia)
-			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
+			throws Exception {
 		Object object = clazz.newInstance();
+
 		for(AtributoInstancia atributoInstancia : instancia.getAtributos()){
-			if(atributoInstancia.getAtributo().getTipoAtributo().getNombre().equals("java.util.ArrayList")){
+			String arrayListName = "java.util.ArrayList";
+			String nombreTipoAtributo = atributoInstancia.getAtributo().getTipoAtributo().getNombre();
+			if(nombreTipoAtributo.startsWith(arrayListName)){
 				ArrayList arrayList = new ArrayList<>();
+				String tipoInterno = nombreTipoAtributo.substring(arrayListName.length(), nombreTipoAtributo.length()-2);
 				for(ValorAtributo valorAtributo : atributoInstancia.getValorAtributo().getValorAtributoList()){
-					if(valorAtributo.getInstancia() == null){
+					String valor = valorAtributo.getValor();
+
+					if(tipoInterno.startsWith("java.")){
+						Class<?> clazzTipoInterno = Class.forName(tipoInterno);
+						Object o = genericService.getSimpleObjectFromString(clazzTipoInterno, valor);
+						arrayList.add(o);
+					} else if(valorAtributo.getInstancia() == null){
 						//de no haberla, el objeto deberia ser simple
-						Object innerObject = getSimpleAtributeValue(atributoInstancia);
+						Object innerObject = getSimpleAtributeValue(valor, tipoInterno);
 						arrayList.add(innerObject);
 					}else{
 						//de haberla, el objeto debe ser complejo
@@ -210,23 +222,27 @@ public class InstanciaService {
 						arrayList);
 			}
 			else{
-				//verifico si hay una instancia dentro de valorAtributo
-				if(atributoInstancia.getValorAtributo().getInstancia() == null){
+				Object innerObject;
+				String valorAtributo = atributoInstancia.getValorAtributo().getValor();
+
+				if(nombreTipoAtributo.startsWith("java.")) {
+					Class<?> clazzTipoInterno = Class.forName(nombreTipoAtributo);
+					innerObject = genericService.getSimpleObjectFromString(clazzTipoInterno, valorAtributo);
+				} else if(atributoInstancia.getValorAtributo().getInstancia() == null){
 					//de no haberla, el objeto deberia ser simple
-					Object innerObject = getSimpleAtributeValue(atributoInstancia);
-					PropertyUtils.setSimpleProperty(
-							object, 
-							atributoInstancia.getAtributo().getNombre(), 
-							innerObject);								
+					innerObject = getSimpleAtributeValue(valorAtributo, atributoInstancia.getAtributo().getTipoAtributo().getNombre());
 				}else{
 					//de haberla, el objeto debe ser complejo
-					Object innerObject = loadObjectFromInstancia(Class.forName(atributoInstancia.getAtributo().getTipoAtributo().getNombre()),atributoInstancia.getValorAtributo().getInstancia());
-					PropertyUtils.setSimpleProperty(
-							object, atributoInstancia.getAtributo().getNombre(), 
-							innerObject);
+					innerObject = loadObjectFromInstancia(Class.forName(nombreTipoAtributo),atributoInstancia.getValorAtributo().getInstancia());
 				}
+
+				PropertyUtils.setSimpleProperty(
+						object,
+						atributoInstancia.getAtributo().getNombre(),
+						innerObject);
 			}
 		}
+
 		return object;
 	}
 
@@ -247,13 +263,27 @@ public class InstanciaService {
 //		}
 //	}
 	
-	private Object getSimpleAtributeValue(AtributoInstancia atributoInstancia)
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		switch(atributoInstancia.getAtributo().getTipoAtributo().getNombre()){
+	private Object getSimpleAtributeValue(String valor, String tipo)
+			throws Exception {
+		switch(tipo){
+			case "byte":
+				return Byte.parseByte(valor);
+			case "short":
+				return Short.parseShort(valor);
 			case "int":
-				return new Integer(atributoInstancia.getValorAtributo().getValor());
+				return Integer.parseInt(valor);
+			case "long":
+				return Long.parseLong(valor);
+			case "float":
+				return Float.parseFloat(valor);
+			case "double":
+				return Double.parseDouble(valor);
+			case "char":
+				return valor.substring(0, 1);
+			case "boolean":
+				return Boolean.parseBoolean(valor);
 			default:
-				return atributoInstancia.getValorAtributo().getValor();
+				throw new Exception(String.format("Valor tipo atributo desconocido: %s", tipo));
 		}
 	}
 		

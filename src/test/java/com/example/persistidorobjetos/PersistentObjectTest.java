@@ -13,6 +13,8 @@ import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import com.example.persistidorobjetos.annotations.NotPersistable;
+import com.example.persistidorobjetos.examples.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,11 +25,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.annotations.Persistable;
-import com.example.persistidorobjetos.examples.Auto;
-import com.example.persistidorobjetos.examples.Persona1;
-import com.example.persistidorobjetos.examples.Persona4;
-import com.example.persistidorobjetos.examples.Persona5;
-import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Session;

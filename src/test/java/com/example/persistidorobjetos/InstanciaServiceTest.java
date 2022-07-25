@@ -3,10 +3,14 @@ package com.example.persistidorobjetos;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.example.persistidorobjetos.annotations.NotPersistable;
+import com.example.persistidorobjetos.annotations.Persistable;
+import com.example.persistidorobjetos.examples.Persona3;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,8 +118,19 @@ public class InstanciaServiceTest {
 	}
 	
 	@Test
-	public void loadObjectTest() throws InstantiationException, IllegalAccessException, StructureChangedException, NoSuchFieldException, SecurityException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
+	public void loadObjectTest() throws Exception {
 		instanciaService.loadObject(1L, PersonaConObjetosComplejos.class);
+	}
+
+	@Test
+	public void sarasa(){
+		Class<?> clazz = Persona3.class;
+		for(Field field : Persona3.class.getDeclaredFields()){
+			if(field.isAnnotationPresent(Persistable.class) ||
+					(clazz.isAnnotationPresent(Persistable.class) && !field.isAnnotationPresent(NotPersistable.class))){
+				System.out.println(field.getGenericType().getTypeName());
+			}
+		}
 	}
 	
 }
