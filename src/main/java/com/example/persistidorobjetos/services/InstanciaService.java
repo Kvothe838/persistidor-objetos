@@ -1,7 +1,7 @@
 package com.example.persistidorobjetos.services;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.persistidorobjetos.exceptions.StructureChangedException;
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.AtributoInstancia;
 import com.example.persistidorobjetos.model.Clase;
@@ -28,6 +29,8 @@ public class InstanciaService {
 
 	@Autowired
 	private EntityManager entityManager;
+	@Autowired
+	private ClaseService claseService;
 	
 	public Instancia generateInstancia(Clase clase, Object object, Session session) 
 				throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
@@ -96,7 +99,7 @@ public class InstanciaService {
 	
 	@Transactional
 	public void saveInstancia(Instancia instancia){
-		Instancia instanciaVieja = getInstanciaByClaseAndSession(instancia.getClase().getId(), instancia.getSession().getId());
+		Instancia instanciaVieja = getInstanciaByClaseAndSession(instancia.getClase().getNombre(), instancia.getSession().getId());
 		if(instanciaVieja != null){
 			entityManager.remove(instanciaVieja);
 		}
@@ -148,11 +151,11 @@ public class InstanciaService {
 		this.entityManager.merge(nuevaInstancia);
 	}
 	
-	public Instancia getInstanciaByClaseAndSession(Long claseId, Long sessionId){
-		String hql = "SELECT i.id FROM INSTANCIA i WHERE i.clase_id = :claseId AND i.session_id = :sessionId";
+	public Instancia getInstanciaByClaseAndSession(String claseNombre, Long sessionId){
+		String hql = "SELECT i.id FROM INSTANCIA i inner join CLASE c on i.clase_id = c.id WHERE c.nombre = :claseNombre AND i.session_id = :sessionId";
 		Query q = this.entityManager.createNativeQuery(hql);
-        q.setParameter("claseId", claseId);
-        q.setParameter("sessionId", sessionId);
+		q.setParameter("claseNombre", claseNombre);
+		q.setParameter("sessionId", sessionId);
         try{
         	Integer instanciaId = (Integer) q.getSingleResult();
         	if(instanciaId != null){
@@ -167,5 +170,92 @@ public class InstanciaService {
         	return null;
         }
 	}
+	
+	public Object loadObject(long sId,Class<?> clazz) throws StructureChangedException, InstantiationException, IllegalAccessException, NoSuchFieldException, SecurityException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
+		//compruebo que la clase este en BD y sea la misma
+		if(claseService.isClaseStored(clazz)){
+			Clase claseBD = claseService.getClase(clazz);
+			Clase claseLoad = claseService.generateClaseObject(clazz);
+			if(claseBD.equals(claseLoad)){
+				Instancia instancia = this.getInstanciaByClaseAndSession(clazz.getName(), sId);
+				//TODO manejar que pasa si no encuentra nada
+				Object object = loadObjectFromInstancia(clazz, instancia);
+				return object;
+			}else{
+				throw new StructureChangedException("La estructura de la clase del objeto a recuperar difiere con la guardada en la Base de Datos");
+			}
+		}
+		return null;
+	}
+
+	private Object loadObjectFromInstancia(Class<?> clazz, Instancia instancia)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
+		Object object = clazz.newInstance();
+		for(AtributoInstancia atributoInstancia : instancia.getAtributos()){
+			if(atributoInstancia.getAtributo().getTipoAtributo().getNombre().equals("java.util.ArrayList")){
+				ArrayList arrayList = new ArrayList<>();
+				for(ValorAtributo valorAtributo : atributoInstancia.getValorAtributo().getValorAtributoList()){
+					if(valorAtributo.getInstancia() == null){
+						//de no haberla, el objeto deberia ser simple
+						Object innerObject = getSimpleAtributeValue(atributoInstancia);
+						arrayList.add(innerObject);
+					}else{
+						//de haberla, el objeto debe ser complejo
+						Object innerObject = loadObjectFromInstancia(Class.forName(atributoInstancia.getAtributo().getTipoAtributo().getNombre()),atributoInstancia.getValorAtributo().getInstancia());
+						arrayList.add(innerObject);
+					}
+				}
+				PropertyUtils.setSimpleProperty(
+						object, atributoInstancia.getAtributo().getNombre(), 
+						arrayList);
+			}
+			else{
+				//verifico si hay una instancia dentro de valorAtributo
+				if(atributoInstancia.getValorAtributo().getInstancia() == null){
+					//de no haberla, el objeto deberia ser simple
+					Object innerObject = getSimpleAtributeValue(atributoInstancia);
+					PropertyUtils.setSimpleProperty(
+							object, 
+							atributoInstancia.getAtributo().getNombre(), 
+							innerObject);								
+				}else{
+					//de haberla, el objeto debe ser complejo
+					Object innerObject = loadObjectFromInstancia(Class.forName(atributoInstancia.getAtributo().getTipoAtributo().getNombre()),atributoInstancia.getValorAtributo().getInstancia());
+					PropertyUtils.setSimpleProperty(
+							object, atributoInstancia.getAtributo().getNombre(), 
+							innerObject);
+				}
+			}
+		}
+		return object;
+	}
+
+//	private void setAtributeValue(Object object, AtributoInstancia atributoInstancia)
+//			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+//		switch(atributoInstancia.getAtributo().getTipoAtributo().getNombre()){
+//			case "int":
+//				PropertyUtils.setSimpleProperty(
+//						object, 
+//						atributoInstancia.getAtributo().getNombre(), 
+//						new Integer(atributoInstancia.getValorAtributo().getValor()));								
+//				break;
+//			default:
+//				PropertyUtils.setSimpleProperty(
+//						object, atributoInstancia.getAtributo().getNombre(), 
+//						atributoInstancia.getValorAtributo().getValor());
+//				break;
+//		}
+//	}
+	
+	private Object getSimpleAtributeValue(AtributoInstancia atributoInstancia)
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+		switch(atributoInstancia.getAtributo().getTipoAtributo().getNombre()){
+			case "int":
+				return new Integer(atributoInstancia.getValorAtributo().getValor());
+			default:
+				return atributoInstancia.getValorAtributo().getValor();
+		}
+	}
+		
 	
 }

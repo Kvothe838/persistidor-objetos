@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.persistidorobjetos.examples.Auto;
 import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
+import com.example.persistidorobjetos.exceptions.StructureChangedException;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Instancia;
 import com.example.persistidorobjetos.model.Session;
@@ -90,7 +91,7 @@ public class InstanciaServiceTest {
 		
 	}
 	
-	@Test
+//	@Test
 	public void loadInstancia(){
 		Instancia instancia = instanciaService.recoverInstancia(1, 1l);
 
@@ -110,6 +111,11 @@ public class InstanciaServiceTest {
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
 				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos")
 				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));
+	}
+	
+	@Test
+	public void loadObjectTest() throws InstantiationException, IllegalAccessException, StructureChangedException, NoSuchFieldException, SecurityException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
+		instanciaService.loadObject(1L, PersonaConObjetosComplejos.class);
 	}
 	
 }

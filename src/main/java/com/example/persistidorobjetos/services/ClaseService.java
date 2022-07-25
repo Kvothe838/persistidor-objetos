@@ -26,8 +26,6 @@ public class ClaseService {
     
     @Autowired
     private AtributoService atributoService;
-    @Autowired 
-    private InstanciaService instanciaService;
 
     @Transactional
     public Clase getClaseByNombre(String nombre) {
@@ -35,7 +33,7 @@ public class ClaseService {
         Query q = this.em.createNativeQuery(hql);
         q.setParameter("nombre", nombre);
         try{
-        	Integer id = (Integer) q.getSingleResult();
+        	BigInteger id = (BigInteger) q.getSingleResult();
         	Clase clase = em.find(Clase.class, id.longValue());
         	return clase;
         }catch(NoResultException e){
