@@ -63,7 +63,10 @@ public class PersistentObject
     
     
     // Devuelve la instancia del objeto o asociada a la clave sId.
-    /*public <T> T load(long sId,Class<T> clazz){ ... };*/
+    public <T> T load(long sId,Class<T> clazz) throws Exception{
+    	T objectToReturn = (T) instanciaService.loadObject(sId, clazz);
+    	return objectToReturn;
+    };
     // Retorna true o false según exista o un una instancia
     // de clazz (aunque sea null) asociada a la clave sId.
     /*public boolean exists(long sId,Class<T> clazz){ ... };*/

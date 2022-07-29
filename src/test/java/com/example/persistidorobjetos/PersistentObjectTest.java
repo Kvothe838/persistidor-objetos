@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,9 +52,9 @@ public class PersistentObjectTest {
 	@Autowired
 	InstanciaService instanciaService;
 
-	@Before
-	@Transactional
-	@Commit
+//	@Before
+//	@Transactional
+//	@Commit
 	public void cleanDatabase(){
 		Query queryAtributoInstancia = this.em.createNativeQuery("DELETE FROM atributo_instancia");
 		Query queryValorAtributo = this.em.createNativeQuery("DELETE FROM valor_atributo");
@@ -170,7 +173,7 @@ public class PersistentObjectTest {
   	}
 	
 	
-	@Test
+//	@Test
 	public void storeTest() throws Exception{
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
@@ -184,16 +187,118 @@ public class PersistentObjectTest {
 		auto.setMarca("Fiat");
 		auto.setModelo("600");
 		persona.setAuto(auto);
-		
+				
 		assertTrue(persistentObject.store(1, persona));
 	}
 
-	@Test
-	@Transactional
-	@Commit
+//	@Test
+//	@Transactional
+//	@Commit
 	public void updateClaseWorks() throws Exception {
 		// Esto no es un test real, hay que hacerlo a mano. Correr este método, luego parar, cambiarle un atributo a Persona1 y
 		// volver a correr este método para finalmente chequear si se cambió el atributo correcto.
 		this.persistentObject.store(1, new PersonaConObjetosComplejos());
+	}
+	
+	@Test
+	public void loadTest() throws Exception{
+		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
+		persona.setDni(34334355);
+		persona.setNombre("Juan Carlos");
+		ArrayList<String> telefonos = new ArrayList<String>();
+		telefonos.add("15-4585-5454");
+		telefonos.add("15-1221-1221");
+		telefonos.add("15-6655-6655");
+		persona.setTelefonos(telefonos);
+		Auto auto = new Auto();
+		auto.setMarca("Fiat");
+		auto.setModelo("600");
+		persona.setAuto(auto);
+		
+		PersonaConObjetosComplejos personaObtenida = persistentObject.load(1, PersonaConObjetosComplejos.class);
+		
+		assertEquals(persona, personaObtenida);
+	}
+	
+//	@Test
+	public void storeMasComplicadoTest() throws Exception{
+		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
+		persona.setDni(34334355);
+		persona.setNombre("Juan Carlos");
+		ArrayList<String> telefonos = new ArrayList<String>();
+		telefonos.add("15-4585-5454");
+		telefonos.add("15-1221-1221");
+		telefonos.add("15-6655-6655");
+		persona.setTelefonos(telefonos);
+		//no instancia kilometros recorridos
+		Auto auto = new Auto();
+		auto.setMarca("Fiat");
+		auto.setModelo("600");
+		persona.setAuto(auto);
+		Direccion direccion1 = new Direccion();
+		direccion1.setCalle("Calle Falsa");
+		direccion1.setCodigoPostal("1234");
+		direccion1.setLocalidad("Mad Remia");
+		direccion1.setNumero(123);
+		direccion1.setPais("Argentina");
+		direccion1.setProvincia("Buenos Aires");
+		Direccion direccion2 = new Direccion();
+		direccion2.setCalle("Calle Falsa Paralela");
+		direccion2.setCodigoPostal("4567");
+		direccion2.setLocalidad("Mad Remia");
+		direccion2.setNumero(123);
+		direccion2.setPais("Argentina");
+		direccion2.setProvincia("Chubut");
+		Direccion direccion3 = null;
+		//una de las direcciones es null
+		ArrayList<Direccion> direcciones = new ArrayList<>(Arrays.asList(direccion1, direccion2, direccion3));
+		persona.setDirecciones(direcciones);
+		//uno de los Integer es null
+		ArrayList<Integer> numerosFavoritos = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,null));
+		persona.setNumerosFavoritos(numerosFavoritos);
+		persona.setLeGustaElArte(true);
+		
+		
+		assertTrue(persistentObject.store(1, persona));
+	}
+	
+	@Test
+	public void loadMasComplicadoTest() throws Exception{
+		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
+		persona.setDni(34334355);
+		persona.setNombre("Juan Carlos");
+		ArrayList<String> telefonos = new ArrayList<String>();
+		telefonos.add("15-4585-5454");
+		telefonos.add("15-1221-1221");
+		telefonos.add("15-6655-6655");
+		persona.setTelefonos(telefonos);
+		Auto auto = new Auto();
+		auto.setMarca("Fiat");
+		auto.setModelo("600");
+		persona.setAuto(auto);
+		Direccion direccion1 = new Direccion();
+		direccion1.setCalle("Calle Falsa");
+		direccion1.setCodigoPostal("1234");
+		direccion1.setLocalidad("Mad Remia");
+		direccion1.setNumero(123);
+		direccion1.setPais("Argentina");
+		direccion1.setProvincia("Buenos Aires");
+		Direccion direccion2 = new Direccion();
+		direccion2.setCalle("Calle Falsa Paralela");
+		direccion2.setCodigoPostal("4567");
+		direccion2.setLocalidad("Mad Remia");
+		direccion2.setNumero(123);
+		direccion2.setPais("Argentina");
+		direccion2.setProvincia("Chubut");
+		Direccion direccion3 = null;
+		ArrayList<Direccion> direcciones = new ArrayList<>(Arrays.asList(direccion1, direccion2, direccion3));
+		persona.setDirecciones(direcciones);
+		ArrayList<Integer> numerosFavoritos = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,null));
+		persona.setNumerosFavoritos(numerosFavoritos);
+		persona.setLeGustaElArte(true);
+		
+		PersonaConObjetosComplejos personaObtenida = persistentObject.load(1, PersonaConObjetosComplejos.class);
+		
+		assertEquals(persona, personaObtenida);
 	}
 }

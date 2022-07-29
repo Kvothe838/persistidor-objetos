@@ -13,4 +13,9 @@ public class PersonaConObjetosComplejos {
 	private String nombre;
 	private Auto auto;
 	private ArrayList<String> telefonos;
+	private ArrayList<Direccion> direcciones;
+	private ArrayList<Integer> numerosFavoritos;
+	private boolean leGustaElArte;
+	
+	
 }

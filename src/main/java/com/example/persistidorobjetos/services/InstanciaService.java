@@ -39,15 +39,20 @@ public class InstanciaService {
 		Instancia instancia = new Instancia();
 		instancia.setClase(clase);
 		instancia.setSession(session);
-		List<AtributoInstancia> atributos = new ArrayList<>();
-		for(Atributo atributo : clase.getAtributos()){
-			Object objetoAtributo = PropertyUtils.getProperty(object, atributo.getNombre());
-			if(objetoAtributo != null){
-				AtributoInstancia atributoInstancia = generateAtributoInstancia(atributo, instancia, objetoAtributo);
-				atributos.add(atributoInstancia);				
+		//en caso de que el objeto sea null, la lista de atributos queda como null, reflejando ese estado
+		if(object != null){
+			List<AtributoInstancia> atributos = new ArrayList<>();
+			for(Atributo atributo : clase.getAtributos()){
+				Object objetoAtributo = PropertyUtils.getProperty(object, atributo.getNombre());
+				if(objetoAtributo != null){
+					AtributoInstancia atributoInstancia = generateAtributoInstancia(atributo, instancia, objetoAtributo);
+					atributos.add(atributoInstancia);				
+				}
 			}
+			instancia.setAtributos(atributos);			
+		}else{
+			instancia.setAtributos(null);	
 		}
-		instancia.setAtributos(atributos);
 		return instancia;
 	}
 	
@@ -193,54 +198,64 @@ public class InstanciaService {
 	private Object loadObjectFromInstancia(Class<?> clazz, Instancia instancia)
 			throws Exception {
 		Object object = clazz.newInstance();
-
-		for(AtributoInstancia atributoInstancia : instancia.getAtributos()){
-			String arrayListName = "java.util.ArrayList";
-			String nombreTipoAtributo = atributoInstancia.getAtributo().getTipoAtributo().getNombre();
-			if(nombreTipoAtributo.startsWith(arrayListName)){
-				ArrayList arrayList = new ArrayList<>();
-				String tipoInterno = nombreTipoAtributo.substring(arrayListName.length(), nombreTipoAtributo.length()-2);
-				for(ValorAtributo valorAtributo : atributoInstancia.getValorAtributo().getValorAtributoList()){
-					String valor = valorAtributo.getValor();
-
-					if(tipoInterno.startsWith("java.")){
-						Class<?> clazzTipoInterno = Class.forName(tipoInterno);
-						Object o = genericService.getSimpleObjectFromString(clazzTipoInterno, valor);
-						arrayList.add(o);
-					} else if(valorAtributo.getInstancia() == null){
+		if(!instancia.getAtributos().isEmpty()){
+			for(AtributoInstancia atributoInstancia : instancia.getAtributos()){
+				String arrayListName = "java.util.ArrayList";
+				String nombreTipoAtributo = atributoInstancia.getAtributo().getTipoAtributo().getNombre();
+				if(nombreTipoAtributo.startsWith(arrayListName)){
+					ArrayList arrayList = new ArrayList<>();
+					String tipoInterno = nombreTipoAtributo.substring(arrayListName.length()+1, nombreTipoAtributo.length()-1);
+					for(ValorAtributo valorAtributo : atributoInstancia.getValorAtributo().getValorAtributoList()){
+						String valor = valorAtributo.getValor();
+						
+						if(tipoInterno.startsWith("java.")){
+							if(valor.equals("null") ){
+								arrayList.add(null);
+							}else{
+								Class<?> clazzTipoInterno = Class.forName(tipoInterno);
+								Object o = genericService.getSimpleObjectFromString(clazzTipoInterno, valor);
+								arrayList.add(o);							
+							}
+						} else if(valorAtributo.getInstancia() == null){
+							//de no haberla, el objeto deberia ser simple
+							Object innerObject = getSimpleAtributeValue(valor, tipoInterno);
+							arrayList.add(innerObject);
+						}else{
+							//de haberla, el objeto debe ser complejo
+							Object innerObject = loadObjectFromInstancia(
+									Class.forName(tipoInterno),
+									valorAtributo.getInstancia());
+							arrayList.add(innerObject);
+						}
+					}
+					PropertyUtils.setSimpleProperty(
+							object, atributoInstancia.getAtributo().getNombre(), 
+							arrayList);
+				}
+				else{
+					Object innerObject;
+					String valorAtributo = atributoInstancia.getValorAtributo().getValor();
+					
+					if(nombreTipoAtributo.startsWith("java.")) {
+						Class<?> clazzTipoInterno = Class.forName(nombreTipoAtributo);
+						innerObject = genericService.getSimpleObjectFromString(clazzTipoInterno, valorAtributo);
+					} else if(atributoInstancia.getValorAtributo().getInstancia() == null){
 						//de no haberla, el objeto deberia ser simple
-						Object innerObject = getSimpleAtributeValue(valor, tipoInterno);
-						arrayList.add(innerObject);
+						innerObject = getSimpleAtributeValue(valorAtributo, atributoInstancia.getAtributo().getTipoAtributo().getNombre());
 					}else{
 						//de haberla, el objeto debe ser complejo
-						Object innerObject = loadObjectFromInstancia(Class.forName(atributoInstancia.getAtributo().getTipoAtributo().getNombre()),atributoInstancia.getValorAtributo().getInstancia());
-						arrayList.add(innerObject);
+						innerObject = loadObjectFromInstancia(Class.forName(nombreTipoAtributo),atributoInstancia.getValorAtributo().getInstancia());
 					}
+					
+					PropertyUtils.setSimpleProperty(
+							object,
+							atributoInstancia.getAtributo().getNombre(),
+							innerObject);
 				}
-				PropertyUtils.setSimpleProperty(
-						object, atributoInstancia.getAtributo().getNombre(), 
-						arrayList);
 			}
-			else{
-				Object innerObject;
-				String valorAtributo = atributoInstancia.getValorAtributo().getValor();
-
-				if(nombreTipoAtributo.startsWith("java.")) {
-					Class<?> clazzTipoInterno = Class.forName(nombreTipoAtributo);
-					innerObject = genericService.getSimpleObjectFromString(clazzTipoInterno, valorAtributo);
-				} else if(atributoInstancia.getValorAtributo().getInstancia() == null){
-					//de no haberla, el objeto deberia ser simple
-					innerObject = getSimpleAtributeValue(valorAtributo, atributoInstancia.getAtributo().getTipoAtributo().getNombre());
-				}else{
-					//de haberla, el objeto debe ser complejo
-					innerObject = loadObjectFromInstancia(Class.forName(nombreTipoAtributo),atributoInstancia.getValorAtributo().getInstancia());
-				}
-
-				PropertyUtils.setSimpleProperty(
-						object,
-						atributoInstancia.getAtributo().getNombre(),
-						innerObject);
-			}
+			
+		}else{
+			return null;
 		}
 
 		return object;
