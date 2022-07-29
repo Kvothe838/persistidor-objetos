@@ -169,11 +169,9 @@ public class InstanciaService {
         		Instancia instancia = entityManager.find(Instancia.class, instanciaId);
         		return instancia;        		
         	}else{
-//        		TODO manejar caso de que no haya instancia con ese id y session id
         		return null;
         	}
         }catch(NoResultException e){
-//			TODO manejar excepcion
         	return null;
         }
 	}
@@ -185,9 +183,10 @@ public class InstanciaService {
 			Clase claseLoad = claseService.generateClaseObject(clazz);
 			if(claseBD.equals(claseLoad)){
 				Instancia instancia = this.getInstanciaByClaseAndSession(clazz.getName(), sId);
-				//TODO manejar que pasa si no encuentra nada
-				Object object = loadObjectFromInstancia(clazz, instancia);
-				return object;
+				if(instancia != null){
+					Object object = loadObjectFromInstancia(clazz, instancia);
+					return object;					
+				}
 			}else{
 				throw new StructureChangedException("La estructura de la clase del objeto a recuperar difiere con la guardada en la Base de Datos");
 			}

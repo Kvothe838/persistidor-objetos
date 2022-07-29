@@ -200,7 +200,7 @@ public class PersistentObjectTest {
 		this.persistentObject.store(1, new PersonaConObjetosComplejos());
 	}
 	
-	@Test
+//	@Test
 	public void loadTest() throws Exception{
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
@@ -218,6 +218,14 @@ public class PersistentObjectTest {
 		PersonaConObjetosComplejos personaObtenida = persistentObject.load(1, PersonaConObjetosComplejos.class);
 		
 		assertEquals(persona, personaObtenida);
+	}
+	
+	@Test
+	public void LoadNoHayInstanciaTest() throws Exception{
+		PersonaConObjetosComplejos personaObtenida = persistentObject.load(-1, PersonaConObjetosComplejos.class);
+		assertEquals(null, personaObtenida);
+		personaObtenida = persistentObject.load(1500, PersonaConObjetosComplejos.class);
+		assertEquals(null, personaObtenida);
 	}
 	
 //	@Test

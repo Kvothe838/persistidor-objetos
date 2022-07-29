@@ -63,6 +63,8 @@ public class PersistentObject
     
     
     // Devuelve la instancia del objeto o asociada a la clave sId.
+    // Si la clase no se encuentra persistida en la base de datos, o no hay una instancia
+    //	asociada a la clase y a ese sessionId, devuelve null
     public <T> T load(long sId,Class<T> clazz) throws Exception{
     	T objectToReturn = (T) instanciaService.loadObject(sId, clazz);
     	return objectToReturn;
