@@ -6,19 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import com.example.persistidorobjetos.annotations.NotPersistable;
-import com.example.persistidorobjetos.examples.*;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.annotations.Persistable;
+import com.example.persistidorobjetos.examples.Auto;
+import com.example.persistidorobjetos.examples.Direccion;
+import com.example.persistidorobjetos.examples.Persona1;
+import com.example.persistidorobjetos.examples.Persona4;
+import com.example.persistidorobjetos.examples.Persona5;
+import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Session;
@@ -35,6 +39,8 @@ import com.example.persistidorobjetos.services.AtributoService;
 import com.example.persistidorobjetos.services.ClaseService;
 import com.example.persistidorobjetos.services.InstanciaService;
 import com.example.persistidorobjetos.services.SessionService;
+
+import ch.qos.logback.core.util.TimeUtil;
 
 @SpringBootTest
 @RunWith(SpringRunner.class) 
@@ -175,6 +181,7 @@ public class PersistentObjectTest {
 	
 //	@Test
 	public void storeTest() throws Exception{
+		Date momentoAntesDelAcceso = new Date(); 
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
 		persona.setNombre("Juan Carlos");
@@ -189,6 +196,9 @@ public class PersistentObjectTest {
 		persona.setAuto(auto);
 				
 		assertTrue(persistentObject.store(1, persona));
+		
+		Session session = sessionService.getSession(1);
+		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
 	}
 
 //	@Test
@@ -202,6 +212,7 @@ public class PersistentObjectTest {
 	
 //	@Test
 	public void loadTest() throws Exception{
+		Date momentoAntesDelAcceso = new Date(); 
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
 		persona.setNombre("Juan Carlos");
@@ -216,8 +227,10 @@ public class PersistentObjectTest {
 		persona.setAuto(auto);
 		
 		PersonaConObjetosComplejos personaObtenida = persistentObject.load(1, PersonaConObjetosComplejos.class);
+		Session session = sessionService.getSession(1);
 		
 		assertEquals(persona, personaObtenida);
+		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
 	}
 	
 	@Test
@@ -230,6 +243,8 @@ public class PersistentObjectTest {
 	
 //	@Test
 	public void storeMasComplicadoTest() throws Exception{
+		Date momentoAntesDelAcceso = new Date(); 
+		
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
 		persona.setNombre("Juan Carlos");
@@ -266,12 +281,16 @@ public class PersistentObjectTest {
 		persona.setNumerosFavoritos(numerosFavoritos);
 		persona.setLeGustaElArte(true);
 		
-		
 		assertTrue(persistentObject.store(1, persona));
+		
+		Session session = sessionService.getSession(1);
+		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
 	}
 	
 	@Test
 	public void loadMasComplicadoTest() throws Exception{
+		Date momentoAntesDelAcceso = new Date(); 
+		
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
 		persona.setNombre("Juan Carlos");
@@ -306,7 +325,9 @@ public class PersistentObjectTest {
 		persona.setLeGustaElArte(true);
 		
 		PersonaConObjetosComplejos personaObtenida = persistentObject.load(1, PersonaConObjetosComplejos.class);
+		Session session = sessionService.getSession(1);
 		
 		assertEquals(persona, personaObtenida);
+		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
 	}
 }
