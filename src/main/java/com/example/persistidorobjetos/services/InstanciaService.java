@@ -33,6 +33,8 @@ public class InstanciaService {
 	private ClaseService claseService;
 	@Autowired
 	private GenericService genericService;
+	@Autowired
+	private SessionService sessionService;
 	
 	public Instancia generateInstancia(Clase clase, Object object, Session session) 
 				throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
@@ -133,22 +135,6 @@ public class InstanciaService {
 	}
 	
 	public Instancia recoverInstancia(Integer instanciaId, Long sessionId){
-//		String hql = "SELECT Count(*) FROM INSTANCIA i WHERE i.id = :instanciaId AND i.session_id = :sessionId";
-//        Query q = this.entityManager.createNativeQuery(hql);
-//        q.setParameter("instanciaId", instanciaId);
-//        q.setParameter("sessionId", sessionId);
-//        try{
-//        	BigInteger count = (BigInteger) q.getSingleResult();
-//        	if(count.intValue() == 1){
-//        		Instancia instancia = entityManager.find(Instancia.class, instanciaId);
-//        		return instancia;        		
-//        	}else{
-////        		TODO manejar caso de que no haya instancia con ese id y session id
-//        		return null;
-//        	}
-//        }catch(NoResultException e){
-//        	return null;
-//        }
 		return entityManager.find(Instancia.class, instanciaId);
 	}
 
@@ -184,8 +170,11 @@ public class InstanciaService {
 			if(claseBD.equals(claseLoad)){
 				Instancia instancia = this.getInstanciaByClaseAndSession(clazz.getName(), sId);
 				if(instancia != null){
+					//TODO consultar si esto realmente tendria que hacerse aca, o antes
+					//actualizo la ultima vez que realizo una accion la session
+					sessionService.updateSession(instancia.getSession());
 					Object object = loadObjectFromInstancia(clazz, instancia);
-					return object;					
+					return object;
 				}
 			}else{
 				throw new StructureChangedException("La estructura de la clase del objeto a recuperar difiere con la guardada en la Base de Datos");
