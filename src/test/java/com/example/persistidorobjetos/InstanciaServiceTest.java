@@ -92,7 +92,7 @@ public class InstanciaServiceTest {
 	
 	@Test
 	public void loadInstancia(){
-		Instancia instancia = instanciaService.recoverInstancia(1, 1l);
+		Instancia instancia = instanciaService.recoverInstancia(1L, 1l);
 
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
 				Objects.equals(atributoInstancia.getAtributo().getNombre(), "dni")

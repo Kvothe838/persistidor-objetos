@@ -54,28 +54,25 @@ public class InstanciaService {
 		ValorAtributo valorAtributo = new ValorAtributo();
 		
 		//pregunto si es collection
-		if(object instanceof Collection<?>){
-			//de ser collection veo si es array o set y seteo los valores de los elementos
-			if(object instanceof ArrayList<?> || object instanceof HashSet<?>){
-				valorAtributo.setValorAtributoList(new ArrayList<>());
-				List list = (ArrayList) object;
-				for(Object element : list){
-					//pregunto si tiene clase persistible
-					if(atributo.getClase() != null){
-						//en caso de que si, creo una instancia y la seteo en valorAtributo
-						Instancia instanciaElemento = generateInstancia(atributo.getClase(), element, null);
-						ValorAtributo valorAtributo2 = new ValorAtributo();
-						valorAtributo2.setInstancia(instanciaElemento);
-						valorAtributo.getValorAtributoList().add(valorAtributo2);
-					}else{
-						//en caso de que no tenga clase persistible, guardo su valor de string
-						String value = String.valueOf(element);
-						ValorAtributo valorAtributo2 = new ValorAtributo();
-						valorAtributo2.setValor(value);
-						valorAtributo.getValorAtributoList().add(valorAtributo2);
-					}
+		if(object instanceof List<?>){
+			valorAtributo.setValorAtributoList(new ArrayList<>());
+			List list = (ArrayList) object;
+			for(Object element : list){
+				//pregunto si tiene clase persistible
+				if(atributo.getClase() != null){
+					//en caso de que si, creo una instancia y la seteo en valorAtributo
+					Instancia instanciaElemento = generateInstancia(atributo.getClase(), element, null);
+					ValorAtributo valorAtributo2 = new ValorAtributo();
+					valorAtributo2.setInstancia(instanciaElemento);
+					valorAtributo.getValorAtributoList().add(valorAtributo2);
+				}else{
+					//en caso de que no tenga clase persistible, guardo su valor de string
+					String value = String.valueOf(element);
+					ValorAtributo valorAtributo2 = new ValorAtributo();
+					valorAtributo2.setValor(value);
+					valorAtributo.getValorAtributoList().add(valorAtributo2);
 				}
-			}			
+			}
 		}else{
 			//pregunto si tiene clase persistible
 			if(atributo.getClase() != null){
@@ -122,24 +119,22 @@ public class InstanciaService {
         }
 	}
 	
-	public Instancia recoverInstancia(Integer instanciaId, Long sessionId){
-//		String hql = "SELECT Count(*) FROM INSTANCIA i WHERE i.id = :instanciaId AND i.session_id = :sessionId";
-//        Query q = this.entityManager.createNativeQuery(hql);
-//        q.setParameter("instanciaId", instanciaId);
-//        q.setParameter("sessionId", sessionId);
-//        try{
-//        	BigInteger count = (BigInteger) q.getSingleResult();
-//        	if(count.intValue() == 1){
-//        		Instancia instancia = entityManager.find(Instancia.class, instanciaId);
-//        		return instancia;        		
-//        	}else{
-////        		TODO manejar caso de que no haya instancia con ese id y session id
-//        		return null;
-//        	}
-//        }catch(NoResultException e){
-//        	return null;
-//        }
-		return entityManager.find(Instancia.class, instanciaId);
+	public Instancia recoverInstancia(Long claseId, Long sessionId){
+		String hql = "SELECT id FROM instancia WHERE session_id = :sessionId AND clase_id = :claseId";
+		Query q = this.entityManager.createNativeQuery(hql);
+        q.setParameter("sessionId", sessionId);
+        q.setParameter("claseId", claseId);
+        try{
+        	Integer id = (Integer) q.getSingleResult();
+
+			if(id == null){
+				return null;
+			}
+
+			return this.entityManager.find(Instancia.class, id);
+		}catch(NoResultException e){
+        	return null;
+        }
 	}
 
 	public void updateInstancia(Clase clase, Object o, Session session) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {

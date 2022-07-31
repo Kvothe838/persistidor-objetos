@@ -3,8 +3,6 @@ package com.example.persistidorobjetos.examples;
 import com.example.persistidorobjetos.annotations.Persistable;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Persistable
 @Data

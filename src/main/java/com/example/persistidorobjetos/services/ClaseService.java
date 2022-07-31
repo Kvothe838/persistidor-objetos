@@ -3,6 +3,7 @@ package com.example.persistidorobjetos.services;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -35,7 +36,7 @@ public class ClaseService {
         Query q = this.em.createNativeQuery(hql);
         q.setParameter("nombre", nombre);
         try{
-        	Integer id = (Integer) q.getSingleResult();
+        	BigInteger id = (BigInteger) q.getSingleResult();
         	Clase clase = em.find(Clase.class, id.longValue());
         	return clase;
         }catch(NoResultException e){
@@ -72,11 +73,8 @@ public class ClaseService {
     public Boolean isClasePersistable(Class<?> clazz){
     	if(clazz.isAnnotationPresent(Persistable.class))
     		return true;
-    	for(Field field : clazz.getDeclaredFields()){
-    		if(field.isAnnotationPresent(Persistable.class))
-    			return true;
-    	}
-    	return false;
+
+		return Arrays.stream(clazz.getDeclaredFields()).anyMatch(field -> field.isAnnotationPresent(Persistable.class));
     }
     
     public Boolean isClaseStored(Class<?> clazz){
