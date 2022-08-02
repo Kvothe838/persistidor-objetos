@@ -11,6 +11,8 @@ import com.example.persistidorobjetos.services.ClaseService;
 import com.example.persistidorobjetos.services.InstanciaService;
 import com.example.persistidorobjetos.services.SessionService;
 
+import java.util.Date;
+
 @Component
 public class PersistentObject
 {
@@ -49,6 +51,8 @@ public class PersistentObject
 				this.instanciaService.saveInstancia(this.instanciaService.generateInstancia(clase, o, session));
 			}
 
+			this.sessionService.saveOrUpdateSession(sId);
+
 			return true;
 		}
 
@@ -68,6 +72,8 @@ public class PersistentObject
 			throw new Exception("Clase no persistible");
         }
 
+		this.sessionService.saveOrUpdateSession(sId);
+
 	    return true;
     };
     
@@ -80,7 +86,17 @@ public class PersistentObject
     // Retorna (en milisegundos) el tiempo transcurrido
     // desde el ultimo acceso registrado para la clave sId,
     // sin considerar las llamadas a este metodo ni a exists.
-    /*public long elapsedTime(long sId){ ... };*/
+    public long elapsedTime(long sId) throws Exception {
+		Session session = this.sessionService.getSession(sId);
+
+		if(session == null){
+			throw new Exception("session no existente");
+		}
+
+		Date now = new Date();
+
+		return now.getTime() - session.getUltimoAcceso().getTime();
+	};
     // retorna y elimina la instancia de clazz vinculada a la
     // clave sId, o retorna null si no existe dicha instancia
     /*public <T> T delete(long sId,Class<T> clazz){ ... };*/

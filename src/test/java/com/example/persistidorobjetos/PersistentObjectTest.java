@@ -1,10 +1,5 @@
 package com.example.persistidorobjetos;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +30,8 @@ import com.example.persistidorobjetos.services.AtributoService;
 import com.example.persistidorobjetos.services.ClaseService;
 import com.example.persistidorobjetos.services.InstanciaService;
 import com.example.persistidorobjetos.services.SessionService;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class) 
@@ -196,5 +193,20 @@ public class PersistentObjectTest {
 		// Esto no es un test real, hay que hacerlo a mano. Correr este método, luego parar, cambiarle un atributo a Persona1 y
 		// volver a correr este método para finalmente chequear si se cambió el atributo correcto.
 		this.persistentObject.store(1, new PersonaConObjetosComplejos());
+	}
+
+	@Test
+	@Transactional
+	public void elapsedTimeWorks() throws Exception {
+		long sId = 1;
+		assertThrows(Exception.class, () -> this.persistentObject.elapsedTime(sId));
+
+		this.persistentObject.store(sId, new Persona1());
+
+		assertDoesNotThrow(() -> this.persistentObject.elapsedTime(sId));
+
+		long elapsedTime = this.persistentObject.elapsedTime(sId);
+
+		assertTrue(elapsedTime < 1000);
 	}
 }
