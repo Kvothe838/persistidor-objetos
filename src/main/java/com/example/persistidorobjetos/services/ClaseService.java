@@ -30,6 +30,8 @@ public class ClaseService {
     @Autowired 
     private InstanciaService instanciaService;
 
+    // ojo que esto devuelve cualquiera porque falta especificar el sessionId.
+    // varios sessionId pueden tener una clase con el mismo nombre.
     @Transactional
     public Clase getClaseByNombre(String nombre) {
         String hql = "SELECT c.id FROM Clase c WHERE c.nombre =:nombre";

@@ -76,7 +76,18 @@ public class PersistentObject
     /*public <T> T load(long sId,Class<T> clazz){ ... };*/
     // Retorna true o false según exista o un una instancia
     // de clazz (aunque sea null) asociada a la clave sId.
-    /*public boolean exists(long sId,Class<T> clazz){ ... };*/
+    public boolean exists(long sId, Class<?> clazz){
+		Clase clase = this.claseService.getClase(clazz);
+
+		if(clase == null){
+			return false;
+		}
+
+		return clase != null;
+
+		// si existe la clase, la instancia tiene que existir, tenga atributos o sea null.
+		// si no existe la clase, no existe la instancia.
+	};
     // Retorna (en milisegundos) el tiempo transcurrido
     // desde el ultimo acceso registrado para la clave sId,
     // sin considerar las llamadas a este metodo ni a exists.
