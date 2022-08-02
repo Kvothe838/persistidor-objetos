@@ -64,31 +64,30 @@ public class PersistentObjectTest {
 	public void cleanDatabase(){
 		Query queryAtributoInstancia = this.em.createNativeQuery("DELETE FROM atributo_instancia");
 		Query queryValorAtributo = this.em.createNativeQuery("DELETE FROM valor_atributo");
-	    Query queryClaseAtributo = this.em.createNativeQuery("DELETE FROM atributo_instancia");
+		Query queryInstancia = this.em.createNativeQuery("DELETE FROM instancia");
 		Query queryAtributo = this.em.createNativeQuery("DELETE FROM atributo");
 		Query queryTipoAtributo = this.em.createNativeQuery("DELETE FROM tipo_atributo");
-		Query queryInstancia = this.em.createNativeQuery("DELETE FROM instancia");
 		Query queryClase = this.em.createNativeQuery("DELETE FROM clase");
 		Query querySession = this.em.createNativeQuery("DELETE FROM session");
+
 		int rowsDeleted = queryAtributoInstancia.executeUpdate();
 		System.out.println("atributo_instancia entities deleted: " + rowsDeleted);
 		rowsDeleted = queryValorAtributo.executeUpdate();
 		System.out.println("valor_atributo entities deleted: " + rowsDeleted);
-		rowsDeleted = queryClaseAtributo.executeUpdate();
-		System.out.println("clase_atributos entities deleted: " + rowsDeleted);
+		rowsDeleted = queryInstancia.executeUpdate();
+		System.out.println("instancia entities deleted: " + rowsDeleted);
 		rowsDeleted = queryAtributo.executeUpdate();
 		System.out.println("atributo entities deleted: " + rowsDeleted);
 		rowsDeleted = queryTipoAtributo.executeUpdate();
 		System.out.println("tipo_atributo entities deleted: " + rowsDeleted);
-		rowsDeleted = queryInstancia.executeUpdate();
-		System.out.println("instancia entities deleted: " + rowsDeleted);
 		rowsDeleted = queryClase.executeUpdate();
 		System.out.println("clase entities deleted: " + rowsDeleted);
 		rowsDeleted = querySession.executeUpdate();
 		System.out.println("session entities deleted: " + rowsDeleted);
 	}
     
-//    @Test
+	@Test
+	@Transactional
 	public void AnnotationPresent() throws NoSuchFieldException, SecurityException{
 		Persona1 persona1 = new Persona1();
 		Persona4 persona4 = new Persona4();
@@ -100,7 +99,6 @@ public class PersistentObjectTest {
 
 		clazz = persona4.getClass();
 		assertFalse(clazz.isAnnotationPresent(Persistable.class));
-		Field[] fields = clazz.getDeclaredFields();
 		Field field = clazz.getDeclaredField("dni");
 		assertTrue(field.isAnnotationPresent(Persistable.class));
 		field = clazz.getDeclaredField("nombre");
@@ -113,14 +111,14 @@ public class PersistentObjectTest {
 		}
 	}
 
-//	@Test
+	@Test
 	@Transactional
 	public void generateClaseWorks(){
 	  Clase clase = this.claseService.generateClaseObject(Persona1.class);
 	  assertNotNull(clase);
 	}
 
-//	@Test
+	@Test
 	@Transactional
 	public void saveClaseWorks() throws Exception {
 		this.persistentObject.store(1, new Persona1());
@@ -140,7 +138,7 @@ public class PersistentObjectTest {
 		);
   	}
 
-//	@Test
+	@Test
 	@Transactional
 	public void saveSessionWorks() throws Exception {
 		this.persistentObject.store(1, new Persona1());
@@ -152,7 +150,7 @@ public class PersistentObjectTest {
 		assertNotNull(session.getUltimoAcceso());
 	}
 	
-//	@Test
+	@Test
 	@Transactional
 	@Commit
 	public void saveClaseComplejaWorks() throws Exception {

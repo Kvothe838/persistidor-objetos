@@ -1,5 +1,6 @@
 package com.example.persistidorobjetos;
 
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,18 +27,27 @@ public class PersistentObject
     // El objeto o puede ser null, en tal caso el valor que se
     // almacenara sera null.
     public boolean store(long sId, Object o) throws Exception {
+		if(o == null){
+			throw new NotYetImplementedException();
+		}
+
     	Class<?> clazz = o.getClass();
-		boolean result;
+		Clase clase = this.claseService.getClase(clazz);
 
-		Instancia instanciaExistente = this.instanciaService.recoverInstancia(o.hashCode(), sId);
-
-		if(instanciaExistente != null){
-			this.claseService.updateClase(clazz);
-
-			Clase clase = this.claseService.getClase(clazz);
+		if(clase != null){
+			Instancia instanciaExistente = this.instanciaService.recoverInstancia(clase.getId(), sId);
 			Session session = this.sessionService.getSession(sId);
 
-			this.instanciaService.updateInstancia(clase, o, session);
+			if(instanciaExistente != null){
+				instanciaExistente.setAtributos(null);
+				this.claseService.updateClase(clazz);
+
+				clase = this.claseService.getClase(clazz);
+
+				this.instanciaService.updateInstancia(clase, o, session);
+			} else {
+				this.instanciaService.saveInstancia(this.instanciaService.generateInstancia(clase, o, session));
+			}
 
 			return true;
 		}
@@ -45,7 +55,6 @@ public class PersistentObject
 	    if(this.claseService.isClasePersistable(clazz)){
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
 	    	//se verifica la existencia de la clase en DB y se crea junto con sus atributos
-	    	Clase clase;
 	    	if (claseService.isClaseStored(clazz)){
 	    		clase = claseService.updateClase(clazz);	
 	    	}else{
@@ -58,6 +67,7 @@ public class PersistentObject
         }else{
 			throw new Exception("Clase no persistible");
         }
+
 	    return true;
     };
     
@@ -69,14 +79,21 @@ public class PersistentObject
     	T objectToReturn = (T) instanciaService.loadObject(sId, clazz);
     	return objectToReturn;
     };
-    // Retorna true o false según exista o un una instancia
+    // Retorna true o false según exista o no una instancia
     // de clazz (aunque sea null) asociada a la clave sId.
-    /*public boolean exists(long sId,Class<T> clazz){ ... };*/
+//    public boolean exists(long sId,Class<?> clazz){
+//    	return 
+//    };
     // Retorna (en milisegundos) el tiempo transcurrido
     // desde el ultimo acceso registrado para la clave sId,
     // sin considerar las llamadas a este metodo ni a exists.
-    /*public long elapsedTime(long sId){ ... };*/
+    public long elapsedTime(long sId){
+    	return sessionService.elapsedTime(sId);
+    };
     // retorna y elimina la instancia de clazz vinculada a la
     // clave sId, o retorna null si no existe dicha instancia
-    /*public <T> T delete(long sId,Class<T> clazz){ ... };*/
+    public <T> T delete(long sId,Class<T> clazz) throws Exception{
+    	T objectToReturn = (T) instanciaService.deleteInstance(sId, clazz);
+    	return objectToReturn;
+    };
 }

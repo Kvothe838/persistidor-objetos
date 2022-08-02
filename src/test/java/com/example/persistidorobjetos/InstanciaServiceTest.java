@@ -97,7 +97,7 @@ public class InstanciaServiceTest {
 	
 //	@Test
 	public void loadInstancia(){
-		Instancia instancia = instanciaService.recoverInstancia(1, 1l);
+		Instancia instancia = instanciaService.recoverInstancia(1L, 1l);
 
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
 				Objects.equals(atributoInstancia.getAtributo().getNombre(), "dni")
@@ -122,7 +122,7 @@ public class InstanciaServiceTest {
 		instanciaService.loadObject(1L, PersonaConObjetosComplejos.class);
 	}
 
-	@Test
+//	@Test
 	public void sarasa(){
 		Class<?> clazz = Persona3.class;
 		for(Field field : Persona3.class.getDeclaredFields()){

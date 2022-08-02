@@ -27,7 +27,7 @@ public class Clase {
     private Long id;
     @Column(name="nombre")
     private String nombre;
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "clase", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Atributo> atributos;
 	
 	
