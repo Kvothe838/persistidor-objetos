@@ -73,15 +73,27 @@ public class PersistentObject
     
     
     // Devuelve la instancia del objeto o asociada a la clave sId.
-    /*public <T> T load(long sId,Class<T> clazz){ ... };*/
-    // Retorna true o false según exista o un una instancia
+    // Si la clase no se encuentra persistida en la base de datos, o no hay una instancia
+    //	asociada a la clase y a ese sessionId, devuelve null
+    public <T> T load(long sId,Class<T> clazz) throws Exception{
+    	T objectToReturn = (T) instanciaService.loadObject(sId, clazz);
+    	return objectToReturn;
+    };
+    // Retorna true o false según exista o no una instancia
     // de clazz (aunque sea null) asociada a la clave sId.
-    /*public boolean exists(long sId,Class<T> clazz){ ... };*/
+//    public boolean exists(long sId,Class<?> clazz){
+//    	return 
+//    };
     // Retorna (en milisegundos) el tiempo transcurrido
     // desde el ultimo acceso registrado para la clave sId,
     // sin considerar las llamadas a este metodo ni a exists.
-    /*public long elapsedTime(long sId){ ... };*/
+    public long elapsedTime(long sId){
+    	return sessionService.elapsedTime(sId);
+    };
     // retorna y elimina la instancia de clazz vinculada a la
     // clave sId, o retorna null si no existe dicha instancia
-    /*public <T> T delete(long sId,Class<T> clazz){ ... };*/
+    public <T> T delete(long sId,Class<T> clazz) throws Exception{
+    	T objectToReturn = (T) instanciaService.deleteInstance(sId, clazz);
+    	return objectToReturn;
+    };
 }

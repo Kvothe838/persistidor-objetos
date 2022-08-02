@@ -112,4 +112,20 @@ public class InstanciaServiceTest {
 				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));
 	}
 	
+	@Test
+	public void loadObjectTest() throws Exception {
+		instanciaService.loadObject(1L, PersonaConObjetosComplejos.class);
+	}
+
+//	@Test
+	public void sarasa(){
+		Class<?> clazz = Persona3.class;
+		for(Field field : Persona3.class.getDeclaredFields()){
+			if(field.isAnnotationPresent(Persistable.class) ||
+					(clazz.isAnnotationPresent(Persistable.class) && !field.isAnnotationPresent(NotPersistable.class))){
+				System.out.println(field.getGenericType().getTypeName());
+			}
+		}
+	}
+	
 }

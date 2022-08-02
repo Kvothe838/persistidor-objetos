@@ -45,4 +45,10 @@ public class SessionService {
             this.updateSession(session);
         }
     }
+    
+    public long elapsedTime(long sId){
+    	Session session = this.getSession(sId);
+    	long ultimoAccesoEnMilli = session.getUltimoAcceso().toInstant().toEpochMilli();
+    	return new Date().toInstant().toEpochMilli() - ultimoAccesoEnMilli;
+    }
 }

@@ -163,4 +163,140 @@ public class InstanciaService {
         }
 	}
 	
+	public Object loadObject(long sId,Class<?> clazz) throws Exception {
+		//compruebo que la clase este en BD y sea la misma
+		if(claseService.isClaseStored(clazz)){
+			Clase claseBD = claseService.getClase(clazz);
+			Clase claseLoad = claseService.generateClaseObject(clazz);
+			if(claseBD.equals(claseLoad)){
+				Instancia instancia = this.getInstanciaByClaseAndSession(clazz.getName(), sId);
+				if(instancia != null){
+					//TODO consultar si esto realmente tendria que hacerse aca, o antes
+					//actualizo la ultima vez que realizo una accion la session
+					sessionService.updateSession(instancia.getSession());
+					Object object = loadObjectFromInstancia(clazz, instancia);
+					return object;
+				}
+			}else{
+				throw new StructureChangedException("La estructura de la clase del objeto a recuperar difiere con la guardada en la Base de Datos");
+			}
+		}
+		return null;
+	}
+
+	private Object loadObjectFromInstancia(Class<?> clazz, Instancia instancia)
+			throws Exception {
+		Object object = clazz.newInstance();
+		if(!instancia.getAtributos().isEmpty()){
+			for(AtributoInstancia atributoInstancia : instancia.getAtributos()){
+				String arrayListName = "java.util.ArrayList";
+				String nombreTipoAtributo = atributoInstancia.getAtributo().getTipoAtributo().getNombre();
+				if(nombreTipoAtributo.startsWith(arrayListName)){
+					ArrayList arrayList = new ArrayList<>();
+					String tipoInterno = nombreTipoAtributo.substring(arrayListName.length()+1, nombreTipoAtributo.length()-1);
+					for(ValorAtributo valorAtributo : atributoInstancia.getValorAtributo().getValorAtributoList()){
+						String valor = valorAtributo.getValor();
+						
+						if(tipoInterno.startsWith("java.")){
+							if(valor.equals("null") ){
+								arrayList.add(null);
+							}else{
+								Class<?> clazzTipoInterno = Class.forName(tipoInterno);
+								Object o = genericService.getSimpleObjectFromString(clazzTipoInterno, valor);
+								arrayList.add(o);							
+							}
+						} else if(valorAtributo.getInstancia() == null){
+							//de no haberla, el objeto deberia ser simple
+							Object innerObject = getSimpleAtributeValue(valor, tipoInterno);
+							arrayList.add(innerObject);
+						}else{
+							//de haberla, el objeto debe ser complejo
+							Object innerObject = loadObjectFromInstancia(
+									Class.forName(tipoInterno),
+									valorAtributo.getInstancia());
+							arrayList.add(innerObject);
+						}
+					}
+					PropertyUtils.setSimpleProperty(
+							object, atributoInstancia.getAtributo().getNombre(), 
+							arrayList);
+				}
+				else{
+					Object innerObject;
+					String valorAtributo = atributoInstancia.getValorAtributo().getValor();
+					
+					if(nombreTipoAtributo.startsWith("java.")) {
+						Class<?> clazzTipoInterno = Class.forName(nombreTipoAtributo);
+						innerObject = genericService.getSimpleObjectFromString(clazzTipoInterno, valorAtributo);
+					} else if(atributoInstancia.getValorAtributo().getInstancia() == null){
+						//de no haberla, el objeto deberia ser simple
+						innerObject = getSimpleAtributeValue(valorAtributo, atributoInstancia.getAtributo().getTipoAtributo().getNombre());
+					}else{
+						//de haberla, el objeto debe ser complejo
+						innerObject = loadObjectFromInstancia(Class.forName(nombreTipoAtributo),atributoInstancia.getValorAtributo().getInstancia());
+					}
+					
+					PropertyUtils.setSimpleProperty(
+							object,
+							atributoInstancia.getAtributo().getNombre(),
+							innerObject);
+				}
+			}
+			
+		}else{
+			return null;
+		}
+
+		return object;
+	}
+
+//	private void setAtributeValue(Object object, AtributoInstancia atributoInstancia)
+//			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+//		switch(atributoInstancia.getAtributo().getTipoAtributo().getNombre()){
+//			case "int":
+//				PropertyUtils.setSimpleProperty(
+//						object, 
+//						atributoInstancia.getAtributo().getNombre(), 
+//						new Integer(atributoInstancia.getValorAtributo().getValor()));								
+//				break;
+//			default:
+//				PropertyUtils.setSimpleProperty(
+//						object, atributoInstancia.getAtributo().getNombre(), 
+//						atributoInstancia.getValorAtributo().getValor());
+//				break;
+//		}
+//	}
+	
+	private Object getSimpleAtributeValue(String valor, String tipo)
+			throws Exception {
+		switch(tipo){
+			case "byte":
+				return Byte.parseByte(valor);
+			case "short":
+				return Short.parseShort(valor);
+			case "int":
+				return Integer.parseInt(valor);
+			case "long":
+				return Long.parseLong(valor);
+			case "float":
+				return Float.parseFloat(valor);
+			case "double":
+				return Double.parseDouble(valor);
+			case "char":
+				return valor.substring(0, 1);
+			case "boolean":
+				return Boolean.parseBoolean(valor);
+			default:
+				throw new Exception(String.format("Valor tipo atributo desconocido: %s", tipo));
+		}
+	}
+
+	public Object deleteInstance(long sId, Class<?> clazz) throws Exception {
+		Object object = this.loadObject(sId, clazz);
+		Clase clase = this.claseService.getClase(clazz);
+		this.deleteInstanciaByClaseAndSession(clase.getId(), sId);
+		return object;
+	}
+		
+	
 }
