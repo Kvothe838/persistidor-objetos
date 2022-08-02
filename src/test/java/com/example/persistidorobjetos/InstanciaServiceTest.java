@@ -8,9 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import com.example.persistidorobjetos.annotations.NotPersistable;
-import com.example.persistidorobjetos.annotations.Persistable;
-import com.example.persistidorobjetos.examples.Persona3;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.example.persistidorobjetos.annotations.NotPersistable;
+import com.example.persistidorobjetos.annotations.Persistable;
 import com.example.persistidorobjetos.examples.Auto;
+import com.example.persistidorobjetos.examples.Persona3;
 import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
-import com.example.persistidorobjetos.exceptions.StructureChangedException;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Instancia;
 import com.example.persistidorobjetos.model.Session;

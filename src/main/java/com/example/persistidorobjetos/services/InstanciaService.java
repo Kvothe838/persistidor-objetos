@@ -113,26 +113,18 @@ public class InstanciaService {
 	}
 	
 	@Transactional
-	public void deleteInstanciaByClaseAndSession(Long claseId, Long sessionId){
-		String hql = "SELECT i.id FROM INSTANCIA i WHERE i.clase_id = :claseId AND i.session_id = :sessionId";
+	public void deleteInstanciaByClaseAndSession(Long sessionId, String claseNombre){
+		String hql = "SELECT i.id FROM INSTANCIA i inner join CLASE c on i.clase_id = c.id WHERE c.nombre = :claseNombre AND i.session_id = :sessionId";
 		Query q = this.entityManager.createNativeQuery(hql);
-        q.setParameter("claseId", claseId);
-        q.setParameter("sessionId", sessionId);
-        try{
-        	Integer instanciaId = (Integer) q.getSingleResult();
-        	if(instanciaId != null){
-        		Instancia instanciaBD = entityManager.find(Instancia.class, instanciaId);
-        		entityManager.remove(instanciaBD);
-        	}else{
-//        		TODO manejar caso de que no haya instancia con ese id y session id
-        	}
-        }catch(NoResultException e){
-//			TODO manejar excepcion
-        }
+		q.setParameter("claseNombre", claseNombre);
+		q.setParameter("sessionId", sessionId);
+    	Integer instanciaId = (Integer) q.getSingleResult();
+    	if(instanciaId != null){
+    		Instancia instanciaBD = entityManager.find(Instancia.class, instanciaId);
+    		entityManager.remove(instanciaBD);
+    	}
 	}
 	
-	public Instancia recoverInstancia(Integer instanciaId, Long sessionId){
-		return entityManager.find(Instancia.class, instanciaId);
 	public Instancia recoverInstancia(Long claseId, Long sessionId){
 		String hql = "SELECT id FROM instancia WHERE session_id = :sessionId AND clase_id = :claseId";
 		Query q = this.entityManager.createNativeQuery(hql);
@@ -151,6 +143,7 @@ public class InstanciaService {
         }
 	}
 
+	@Transactional
 	public void updateInstancia(Clase clase, Object o, Session session) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
 		Instancia nuevaInstancia = this.generateInstancia(clase, o, session);
 		nuevaInstancia.setId(o.hashCode());
@@ -175,7 +168,26 @@ public class InstanciaService {
         }
 	}
 	
+	public boolean existsInstanciaByClaseAndSession(Long sessionId, String claseNombre){
+		String hql = "SELECT i.id FROM INSTANCIA i inner join CLASE c on i.clase_id = c.id WHERE c.nombre = :claseNombre AND i.session_id = :sessionId";
+		Query q = this.entityManager.createNativeQuery(hql);
+		q.setParameter("claseNombre", claseNombre);
+		q.setParameter("sessionId", sessionId);
+        try{
+        	Integer instanciaId = (Integer) q.getSingleResult();
+        	if(instanciaId != null){
+        		return true;        		
+        	}else{
+        		return false;
+        	}
+        }catch(NoResultException e){
+        	return false;
+        }
+	}
+	
 	public Object loadObject(long sId,Class<?> clazz) throws Exception {
+		//actualizo la ultima vez que realizo una accion la session
+		sessionService.saveOrUpdateSession(sId);
 		//compruebo que la clase este en BD y sea la misma
 		if(claseService.isClaseStored(clazz)){
 			Clase claseBD = claseService.getClase(clazz);
@@ -183,9 +195,6 @@ public class InstanciaService {
 			if(claseBD.equals(claseLoad)){
 				Instancia instancia = this.getInstanciaByClaseAndSession(clazz.getName(), sId);
 				if(instancia != null){
-					//TODO consultar si esto realmente tendria que hacerse aca, o antes
-					//actualizo la ultima vez que realizo una accion la session
-					sessionService.updateSession(instancia.getSession());
 					Object object = loadObjectFromInstancia(clazz, instancia);
 					return object;
 				}
@@ -303,11 +312,15 @@ public class InstanciaService {
 		}
 	}
 
+	@Transactional
 	public Object deleteInstance(long sId, Class<?> clazz) throws Exception {
-		Object object = this.loadObject(sId, clazz);
-		Clase clase = this.claseService.getClase(clazz);
-		this.deleteInstanciaByClaseAndSession(clase.getId(), sId);
-		return object;
+		sessionService.saveOrUpdateSession(sId);
+		if(existsInstanciaByClaseAndSession(sId, clazz.getName())){
+			Object object = this.loadObject(sId, clazz);
+			this.deleteInstanciaByClaseAndSession(sId, clazz.getName());
+			return object;			
+		}			
+		return null;
 	}
 		
 	

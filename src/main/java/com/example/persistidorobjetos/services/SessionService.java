@@ -31,7 +31,6 @@ public class SessionService {
     @Transactional
     public void updateSession(Session session){
         session.setUltimoAcceso(new Date());
-
         this.em.merge(session);
     }
 

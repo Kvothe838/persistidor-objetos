@@ -30,6 +30,8 @@ public class PersistentObject
 		if(o == null){
 			throw new NotYetImplementedException();
 		}
+		
+		sessionService.saveOrUpdateSession(sId);
 
     	Class<?> clazz = o.getClass();
 		Clase clase = this.claseService.getClase(clazz);
@@ -37,7 +39,6 @@ public class PersistentObject
 		if(clase != null){
 			Instancia instanciaExistente = this.instanciaService.recoverInstancia(clase.getId(), sId);
 			Session session = this.sessionService.getSession(sId);
-
 			if(instanciaExistente != null){
 				instanciaExistente.setAtributos(null);
 				this.claseService.updateClase(clazz);
@@ -81,9 +82,9 @@ public class PersistentObject
     };
     // Retorna true o false según exista o no una instancia
     // de clazz (aunque sea null) asociada a la clave sId.
-//    public boolean exists(long sId,Class<?> clazz){
-//    	return 
-//    };
+    public boolean exists(long sId,Class<?> clazz){
+    	return instanciaService.existsInstanciaByClaseAndSession(sId, clazz.getName());
+    };
     // Retorna (en milisegundos) el tiempo transcurrido
     // desde el ultimo acceso registrado para la clave sId,
     // sin considerar las llamadas a este metodo ni a exists.
