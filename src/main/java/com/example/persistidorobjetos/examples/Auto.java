@@ -7,8 +7,6 @@ import lombok.Data;
 @Persistable
 @Data
 public class Auto {
-	
 	private String marca;
 	private String modelo;
-	
 }
