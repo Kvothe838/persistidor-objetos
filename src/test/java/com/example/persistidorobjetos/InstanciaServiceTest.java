@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.annotations.NotPersistable;
 import com.example.persistidorobjetos.annotations.Persistable;
@@ -39,8 +40,8 @@ public class InstanciaServiceTest {
 	SessionService sessionService;
 	
 	
-//	@Test
-//	@Transactional
+	@Test
+	@Transactional
 	public void test() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
@@ -94,9 +95,11 @@ public class InstanciaServiceTest {
 		
 	}
 	
-//	@Test
-	public void loadInstancia(){
-		Instancia instancia = instanciaService.recoverInstancia(1L, 1l);
+	@Test
+	@Transactional
+	public void loadInstancia() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
+		this.test();
+		Instancia instancia = instanciaService.getInstanciaByClaseAndSession(PersonaConObjetosComplejos.class.getName(), 1l);
 
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
 				Objects.equals(atributoInstancia.getAtributo().getNombre(), "dni")
@@ -116,7 +119,7 @@ public class InstanciaServiceTest {
 				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));
 	}
 	
-	@Test
+//	@Test
 	public void loadObjectTest() throws Exception {
 		instanciaService.loadObject(1L, PersonaConObjetosComplejos.class);
 	}

@@ -208,7 +208,7 @@ public class InstanciaService {
 	private Object loadObjectFromInstancia(Class<?> clazz, Instancia instancia)
 			throws Exception {
 		Object object = clazz.newInstance();
-		if(!instancia.getAtributos().isEmpty()){
+		if(!(instancia.getAtributos() == null || instancia.getAtributos().isEmpty())){
 			for(AtributoInstancia atributoInstancia : instancia.getAtributos()){
 				String arrayListName = "java.util.ArrayList";
 				String nombreTipoAtributo = atributoInstancia.getAtributo().getTipoAtributo().getNombre();

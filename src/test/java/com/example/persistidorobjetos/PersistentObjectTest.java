@@ -15,11 +15,13 @@ import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.annotations.Persistable;
 import com.example.persistidorobjetos.examples.Auto;
@@ -57,32 +59,56 @@ public class PersistentObjectTest {
 //	@Transactional
 //	@Commit
 	public void cleanDatabase(){
-		Query queryAtributoInstancia = this.em.createNativeQuery("DELETE FROM atributo_instancia");
-		Query queryValorAtributo = this.em.createNativeQuery("DELETE FROM valor_atributo");
-		Query queryInstancia = this.em.createNativeQuery("DELETE FROM instancia");
-		Query queryAtributo = this.em.createNativeQuery("DELETE FROM atributo");
-		Query queryTipoAtributo = this.em.createNativeQuery("DELETE FROM tipo_atributo");
-		Query queryClase = this.em.createNativeQuery("DELETE FROM clase");
-		Query querySession = this.em.createNativeQuery("DELETE FROM session");
-
-		int rowsDeleted = queryAtributoInstancia.executeUpdate();
-		System.out.println("atributo_instancia entities deleted: " + rowsDeleted);
-		rowsDeleted = queryValorAtributo.executeUpdate();
-		System.out.println("valor_atributo entities deleted: " + rowsDeleted);
-		rowsDeleted = queryInstancia.executeUpdate();
-		System.out.println("instancia entities deleted: " + rowsDeleted);
+		
+		
+		Query queryClaseAtributos = this.em.createNativeQuery("delete from CLASE_ATRIBUTOS;");
+		Query queryAtributoInstancia = this.em.createNativeQuery("delete from ATRIBUTO_INSTANCIA;");
+		Query queryAtributo = this.em.createNativeQuery("delete from ATRIBUTO;");
+		Query queryTipoAtributo = this.em.createNativeQuery("delete from TIPO_ATRIBUTO;");
+		Query queryValorAtributoValorAtributoList = this.em.createNativeQuery("delete from VALOR_ATRIBUTO_VALOR_ATRIBUTO_LIST;");
+		Query queryValorAtributo = this.em.createNativeQuery("delete from VALOR_ATRIBUTO;");
+		Query queryInstancia = this.em.createNativeQuery("delete from INSTANCIA;");
+		Query queryClase = this.em.createNativeQuery("delete from CLASE;");
+		Query querySession = this.em.createNativeQuery("delete from SESSION;");
+		Query queryHibernateSequences = this.em.createNativeQuery("delete from HIBERNATE_SEQUENCES;");
+		
+		int rowsDeleted = queryClaseAtributos.executeUpdate();
+		rowsDeleted = queryAtributoInstancia.executeUpdate();
 		rowsDeleted = queryAtributo.executeUpdate();
-		System.out.println("atributo entities deleted: " + rowsDeleted);
 		rowsDeleted = queryTipoAtributo.executeUpdate();
-		System.out.println("tipo_atributo entities deleted: " + rowsDeleted);
+		rowsDeleted = queryValorAtributoValorAtributoList.executeUpdate();
+		rowsDeleted = queryValorAtributo.executeUpdate();
+		rowsDeleted = queryInstancia.executeUpdate();
 		rowsDeleted = queryClase.executeUpdate();
-		System.out.println("clase entities deleted: " + rowsDeleted);
 		rowsDeleted = querySession.executeUpdate();
-		System.out.println("session entities deleted: " + rowsDeleted);
+		rowsDeleted = queryHibernateSequences.executeUpdate();
+		
+//		Query queryAtributoInstancia = this.em.createNativeQuery("DELETE FROM atributo_instancia");
+//		Query queryValorAtributo = this.em.createNativeQuery("DELETE FROM valor_atributo");
+//		Query queryInstancia = this.em.createNativeQuery("DELETE FROM instancia");
+//		Query queryAtributo = this.em.createNativeQuery("DELETE FROM atributo");
+//		Query queryTipoAtributo = this.em.createNativeQuery("DELETE FROM tipo_atributo");
+//		Query queryClase = this.em.createNativeQuery("DELETE FROM clase");
+//		Query querySession = this.em.createNativeQuery("DELETE FROM session");
+//
+//		int rowsDeleted = queryAtributoInstancia.executeUpdate();
+//		System.out.println("atributo_instancia entities deleted: " + rowsDeleted);
+//		rowsDeleted = queryValorAtributo.executeUpdate();
+//		System.out.println("valor_atributo entities deleted: " + rowsDeleted);
+//		rowsDeleted = queryInstancia.executeUpdate();
+//		System.out.println("instancia entities deleted: " + rowsDeleted);
+//		rowsDeleted = queryAtributo.executeUpdate();
+//		System.out.println("atributo entities deleted: " + rowsDeleted);
+//		rowsDeleted = queryTipoAtributo.executeUpdate();
+//		System.out.println("tipo_atributo entities deleted: " + rowsDeleted);
+//		rowsDeleted = queryClase.executeUpdate();
+//		System.out.println("clase entities deleted: " + rowsDeleted);
+//		rowsDeleted = querySession.executeUpdate();
+//		System.out.println("session entities deleted: " + rowsDeleted);
 	}
     
-//	@Test
-//	@Transactional
+	@Test
+	@Transactional
 	public void AnnotationPresent() throws NoSuchFieldException, SecurityException{
 		Persona1 persona1 = new Persona1();
 		Persona4 persona4 = new Persona4();
@@ -106,15 +132,15 @@ public class PersistentObjectTest {
 		}
 	}
 
-//	@Test
-//	@Transactional
+	@Test
+	@Transactional
 	public void generateClaseWorks(){
 	  Clase clase = this.claseService.generateClaseObject(Persona1.class);
 	  assertNotNull(clase);
 	}
-//
-//	@Test
-//	@Transactional
+
+	@Test
+	@Transactional
 	public void saveClaseWorks() throws Exception {
 		this.persistentObject.store(1, new Persona1());
 
@@ -133,8 +159,8 @@ public class PersistentObjectTest {
 		);
   	}
 
-//	@Test
-//	@Transactional
+	@Test
+	@Transactional
 	public void saveSessionWorks() throws Exception {
 		this.persistentObject.store(1, new Persona1());
 
@@ -145,15 +171,15 @@ public class PersistentObjectTest {
 		assertNotNull(session.getUltimoAcceso());
 	}
 	
-//	@Test
-//	@Transactional
+	@Test
+	@Transactional
 //	@Commit
 	public void saveClaseComplejaWorks() throws Exception {
 		this.persistentObject.store(1,new PersonaConObjetosComplejos());
 		Clase clase = claseService.getClaseByNombre(PersonaConObjetosComplejos.class.getName());
 		List<Atributo> atributos = clase.getAtributos();
 
-		assertEquals(4, atributos.size());
+		assertEquals(7, atributos.size());
 		assertTrue(atributos.stream().anyMatch(atributo ->
 			Objects.equals(atributo.getNombre(), "dni")
 				&& Objects.equals(atributo.getTipoAtributo().getNombre(), int.class.getName())
@@ -167,12 +193,13 @@ public class PersistentObjectTest {
 		assertTrue(atributos.stream().anyMatch(atributo ->
 		Objects.equals(atributo.getNombre(), "auto")
 				&& Objects.equals(atributo.getTipoAtributo().getNombre(), Auto.class.getName())
-				&& atributo.getClase().getAtributos().size() == 2)
+				&& atributo.getClase().getAtributos().size() == 3)
 		);
   	}
 	
 	
-//	@Test
+	@Test
+	@Transactional
 	public void storeTest() throws Exception{
 		Date momentoAntesDelAcceso = new Date(); 
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
@@ -194,8 +221,8 @@ public class PersistentObjectTest {
 		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
 	}
 
-//	@Test
-//	@Transactional
+	@Test
+	@Transactional
 //	@Commit
 	public void updateClaseWorks() throws Exception {
 		// Esto no es un test real, hay que hacerlo a mano. Correr este método, luego parar, cambiarle un atributo a Persona1 y
@@ -203,9 +230,12 @@ public class PersistentObjectTest {
 		this.persistentObject.store(1, new PersonaConObjetosComplejos());
 	}
 	
-//	@Test
+	@Test
+	@Transactional
 	public void loadTest() throws Exception{
 		Date momentoAntesDelAcceso = new Date(); 
+		this.storeTest();
+		
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
 		persona.setNombre("Juan Carlos");
@@ -234,7 +264,8 @@ public class PersistentObjectTest {
 		assertEquals(null, personaObtenida);
 	}
 	
-//	@Test
+	@Test
+	@Transactional
 	public void storeMasComplicadoTest() throws Exception{
 		Date momentoAntesDelAcceso = new Date(); 
 		
@@ -284,44 +315,14 @@ public class PersistentObjectTest {
 		assertTrue(millis < 5000);
 	}
 	
-//	@Test
+	@Test
+	@Transactional
 	public void loadMasComplicadoTest() throws Exception{
 		Date momentoAntesDelAcceso = new Date(); 
+		PersonaConObjetosComplejos persona = getPersonaConObjetosComplejos();
+		assertTrue(persistentObject.store(1l, persona));
 		
-		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
-		persona.setDni(34334355);
-		persona.setNombre("Juan Carlos");
-		ArrayList<String> telefonos = new ArrayList<String>();
-		telefonos.add("15-4585-5454");
-		telefonos.add("15-1221-1221");
-		telefonos.add("15-6655-6655");
-		persona.setTelefonos(telefonos);
-		Auto auto = new Auto();
-		auto.setMarca("Fiat");
-		auto.setModelo("600");
-		persona.setAuto(auto);
-		Direccion direccion1 = new Direccion();
-		direccion1.setCalle("Calle Falsa");
-		direccion1.setCodigoPostal("1234");
-		direccion1.setLocalidad("Mad Remia");
-		direccion1.setNumero(123);
-		direccion1.setPais("Argentina");
-		direccion1.setProvincia("Buenos Aires");
-		Direccion direccion2 = new Direccion();
-		direccion2.setCalle("Calle Falsa Paralela");
-		direccion2.setCodigoPostal("4567");
-		direccion2.setLocalidad("Mad Remia");
-		direccion2.setNumero(123);
-		direccion2.setPais("Argentina");
-		direccion2.setProvincia("Chubut");
-		Direccion direccion3 = null;
-		ArrayList<Direccion> direcciones = new ArrayList<>(Arrays.asList(direccion1, direccion2, direccion3));
-		persona.setDirecciones(direcciones);
-		ArrayList<Integer> numerosFavoritos = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,null));
-		persona.setNumerosFavoritos(numerosFavoritos);
-		persona.setLeGustaElArte(true);
-		
-		PersonaConObjetosComplejos personaObtenida = persistentObject.load(1, PersonaConObjetosComplejos.class);
+		PersonaConObjetosComplejos personaObtenida = persistentObject.load(1l, PersonaConObjetosComplejos.class);
 		Session session = sessionService.getSession(1);
 		
 		assertEquals(persona, personaObtenida);
@@ -332,15 +333,19 @@ public class PersistentObjectTest {
 		assertTrue(millis < 5000);
 	}
 	
-//	@Test
-	public void existsInstanciaForSession(){
+	@Test
+	@Transactional
+	public void existsInstanciaForSession() throws Exception{
+		this.storeMasComplicadoTest();
 		Class<?> clazz = PersonaConObjetosComplejos.class;
 		boolean exists = instanciaService.existsInstanciaByClaseAndSession(1l, clazz.getName());
 		assertTrue(exists);
 	}
 	
-//	@Test
-	public void noInstanciaForSession(){
+	@Test
+	@Transactional
+	public void noInstanciaForSession() throws Exception{
+		this.storeMasComplicadoTest();
 		//no hay instancia para esa clase
 		Class<?> clazz = Persona3.class;
 		boolean exists = instanciaService.existsInstanciaByClaseAndSession(1l, clazz.getName());
@@ -355,10 +360,57 @@ public class PersistentObjectTest {
 		assertFalse(exists);
 	}
 	
-//	@Test
+	@Test
+	@Transactional
 	public void deleteInstanciaForSessionTest() throws Exception{
-		Date momentoAntesDelAcceso = new Date(); 
+		PersonaConObjetosComplejos persona = getPersonaConObjetosComplejos();
+		assertTrue(persistentObject.store(1l, persona));
 		
+		Date momentoAntesDelAcceso = new Date(); 
+		PersonaConObjetosComplejos personaBorrada = persistentObject.delete(1l, PersonaConObjetosComplejos.class);
+		
+		assertEquals(persona, personaBorrada);
+		assertFalse(persistentObject.exists(1l, PersonaConObjetosComplejos.class));
+		
+		Session session = sessionService.getSession(1);
+		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
+		
+		long millis = persistentObject.elapsedTime(1l);
+		assertTrue(millis > 0);
+		assertTrue(millis < 5000);
+	}
+	
+//	@Test
+	public void noInstanciaToDeleteTest() throws Exception{
+		Date momentoAntesDelAcceso = new Date(); 
+		Direccion direccion = persistentObject.delete(1l, Direccion.class);
+		
+		assertEquals(null, direccion);
+		assertFalse(persistentObject.exists(1l, PersonaConObjetosComplejos.class));
+		
+		Session session = sessionService.getSession(1l);
+		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
+		
+		Long millis = persistentObject.elapsedTime(1l);
+		assertTrue(millis > 0);
+		assertTrue(millis < 5000);
+	}
+	
+	@Test
+	@Transactional
+	public void noSessionToDeleteInstanciaTest() throws Exception{
+		sessionService.saveOrUpdateSession(1l);
+		Direccion direccion = persistentObject.delete(-1l, Direccion.class);
+		
+		assertEquals(null, direccion);
+		assertFalse(persistentObject.exists(1l, PersonaConObjetosComplejos.class));
+		
+		Date momentoAntesDelAcceso = new Date(); 
+		Session session = sessionService.getSession(1l);
+		assertFalse(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
+	}
+	
+	private PersonaConObjetosComplejos getPersonaConObjetosComplejos(){
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
 		persona.setNombre("Juan Carlos");
@@ -394,46 +446,7 @@ public class PersistentObjectTest {
 		ArrayList<Integer> numerosFavoritos = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,null));
 		persona.setNumerosFavoritos(numerosFavoritos);
 		persona.setLeGustaElArte(true);
-		
-		PersonaConObjetosComplejos personaBorrada = persistentObject.delete(1l, PersonaConObjetosComplejos.class);
-		
-		assertEquals(persona, personaBorrada);
-		assertFalse(persistentObject.exists(1l, PersonaConObjetosComplejos.class));
-		
-		Session session = sessionService.getSession(1);
-		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
-		
-		long millis = persistentObject.elapsedTime(1l);
-		assertTrue(millis > 0);
-		assertTrue(millis < 5000);
-	}
-	
-	@Test
-	public void noInstanciaToDeleteTest() throws Exception{
-		Date momentoAntesDelAcceso = new Date(); 
-		Direccion direccion = persistentObject.delete(1l, Direccion.class);
-		
-		assertEquals(null, direccion);
-		assertFalse(persistentObject.exists(1l, PersonaConObjetosComplejos.class));
-		
-		Session session = sessionService.getSession(1l);
-		assertTrue(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
-		
-		Long millis = persistentObject.elapsedTime(1l);
-		assertTrue(millis > 0);
-		assertTrue(millis < 5000);
-	}
-	
-	@Test
-	public void noSessionToDeleteInstanciaTest() throws Exception{
-		Date momentoAntesDelAcceso = new Date(); 
-		Direccion direccion = persistentObject.delete(-1l, Direccion.class);
-		
-		assertEquals(null, direccion);
-		assertFalse(persistentObject.exists(1l, PersonaConObjetosComplejos.class));
-		
-		Session session = sessionService.getSession(1l);
-		assertFalse(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
+		return persona;
 	}
 	
 }
