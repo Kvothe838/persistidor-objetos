@@ -33,3 +33,5 @@ build/
 .vscode/
 
 /jdbc:hsqldb:mem:./
+
+database/
