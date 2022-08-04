@@ -1,10 +1,5 @@
 package com.example.persistidorobjetos;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +10,7 @@ import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import com.example.persistidorobjetos.examples.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,13 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.persistidorobjetos.annotations.Persistable;
-import com.example.persistidorobjetos.examples.Auto;
-import com.example.persistidorobjetos.examples.Direccion;
-import com.example.persistidorobjetos.examples.Persona1;
-import com.example.persistidorobjetos.examples.Persona3;
-import com.example.persistidorobjetos.examples.Persona4;
-import com.example.persistidorobjetos.examples.Persona5;
-import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Session;
@@ -38,6 +27,8 @@ import com.example.persistidorobjetos.services.AtributoService;
 import com.example.persistidorobjetos.services.ClaseService;
 import com.example.persistidorobjetos.services.InstanciaService;
 import com.example.persistidorobjetos.services.SessionService;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class) 
@@ -362,7 +353,8 @@ public class PersistentObjectTest {
 		assertTrue(millis < 5000);
 	}
 	
-//	@Test
+	@Test
+	@Transactional
 	public void noInstanciaToDeleteTest() throws Exception{
 		Date momentoAntesDelAcceso = new Date(); 
 		Direccion direccion = persistentObject.delete(1l, Direccion.class);
@@ -469,6 +461,22 @@ public class PersistentObjectTest {
 		persona.setNumerosFavoritos(numerosFavoritos);
 		persona.setLeGustaElArte(false);
 		return persona;
+	}
+
+	@Test
+	@Transactional
+	public void existsFunciona() {
+		Persona1 persona = new Persona1();
+		persona.setDni(12345);
+		persona.setNombre("Pedro");
+
+		assertFalse(this.persistentObject.exists(1, Persona1.class));
+
+		assertDoesNotThrow(() -> this.persistentObject.store(1, persona));
+
+		assertTrue(this.persistentObject.exists(1, Persona1.class));
+		assertFalse(this.persistentObject.exists(2, Persona1.class));
+		assertFalse(this.persistentObject.exists(1, Persona2.class));
 	}
 	
 }
