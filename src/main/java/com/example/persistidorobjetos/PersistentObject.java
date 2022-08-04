@@ -34,37 +34,23 @@ public class PersistentObject
 		sessionService.saveOrUpdateSession(sId);
 
     	Class<?> clazz = o.getClass();
-		Clase clase = this.claseService.getClase(clazz);
-
-		if(clase != null){
-			Instancia instanciaExistente = this.instanciaService.recoverInstancia(clase.getId(), sId);
-			Session session = this.sessionService.getSession(sId);
-			if(instanciaExistente != null){
-				instanciaExistente.setAtributos(null);
-				this.claseService.updateClase(clazz);
-
-				clase = this.claseService.getClase(clazz);
-
-				this.instanciaService.updateInstancia(clase, o, session);
-			} else {
-				this.instanciaService.saveInstancia(this.instanciaService.generateInstancia(clase, o, session));
-			}
-
-			return true;
-		}
 
 	    if(this.claseService.isClasePersistable(clazz)){
 	    	System.out.println("La clase es persistible, se procede a persistir el objeto");
 	    	//se verifica la existencia de la clase en DB y se crea junto con sus atributos
+	    	Clase clase = null;
 	    	if (claseService.isClaseStored(clazz)){
 	    		clase = claseService.updateClase(clazz);	
 	    	}else{
 	    		clase = this.claseService.saveClase(clazz);
-	    		this.sessionService.saveOrUpdateSession(sId);	    		
 	    	}
 	    	Session session = sessionService.getSession(sId);
-	    	Instancia instancia = instanciaService.generateInstancia(clase, o, session);
-	    	instanciaService.saveInstancia(instancia);
+	    	if(instanciaService.existsInstanciaByClaseAndSession(sId, clazz.getName())){
+	    		instanciaService.updateInstancia(clase, o, session);
+	    	}else{
+	    		Instancia instancia = instanciaService.generateInstancia(clase, o, session);	    		
+	    		instanciaService.saveInstancia(instancia);
+	    	}
         }else{
 			throw new Exception("Clase no persistible");
         }

@@ -105,10 +105,6 @@ public class InstanciaService {
 	
 	@Transactional
 	public void saveInstancia(Instancia instancia){
-		Instancia instanciaVieja = getInstanciaByClaseAndSession(instancia.getClase().getNombre(), instancia.getSession().getId());
-		if(instanciaVieja != null){
-			entityManager.remove(instanciaVieja);
-		}
 		entityManager.persist(instancia);
 	}
 	
@@ -145,9 +141,10 @@ public class InstanciaService {
 
 	@Transactional
 	public void updateInstancia(Clase clase, Object o, Session session) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+		Instancia oldInstancia = this.getInstanciaByClaseAndSession(clase.getNombre(), session.getId());
+		entityManager.remove(oldInstancia);
 		Instancia nuevaInstancia = this.generateInstancia(clase, o, session);
-		nuevaInstancia.setId(o.hashCode());
-		this.entityManager.merge(nuevaInstancia);
+		entityManager.persist(nuevaInstancia);	
 	}
 	
 	public Instancia getInstanciaByClaseAndSession(String claseNombre, Long sessionId){

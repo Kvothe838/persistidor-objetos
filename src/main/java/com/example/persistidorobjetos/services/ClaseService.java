@@ -83,34 +83,15 @@ public class ClaseService {
         return result.intValue() == 1;
     }
 
-//		TODO no se estan borrando las instancias antes de hacer el merge de las clases, va a tirar conflicto 
-//    public void updateClase(Class<?> clazz){
-//        Clase clasePersistida = this.getClaseByNombre(clazz.getName());
-//        Clase nuevaClase = this.generateClaseObject(clazz);
-//
-//        List<Integer> idAtributosPersistidosOrdenados = clasePersistida.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
-//        List<Integer> idAtributosNuevosOrdenados = nuevaClase.getAtributos().stream().map(Atributo::getId).sorted().collect(Collectors.toList());
-//
-//        boolean sonAtributosIguales = idAtributosPersistidosOrdenados.equals(idAtributosNuevosOrdenados);
-//
-//        if(sonAtributosIguales){
-//            return;
-//        }
-//
-//        clasePersistida.setAtributos(nuevaClase.getAtributos());
-//        this.em.merge(clasePersistida);
-//    }
-    
-
     @Transactional
 	public Clase updateClase(Class<?> clazz){
 		Clase claseEnBD = getClaseByNombre(clazz.getName());
 		Clase claseNueva = generateClaseObject(clazz);
 		if(!claseEnBD.equals(claseNueva)){
-			claseEnBD.getAtributos().clear();
-			claseEnBD.getAtributos().addAll(claseNueva.getAtributos());
-			deleteInstanciasOfClase(clazz);
-			em.merge(claseEnBD);
+			deleteAllInstanciasOfClase(clazz);
+			em.remove(claseEnBD);
+			em.persist(claseNueva);
+			claseEnBD = claseNueva;
 		}
 		return claseEnBD;
     }
@@ -119,7 +100,7 @@ public class ClaseService {
         return this.getClaseByNombre(clazz.getName());
     }
     
-    private void deleteInstanciasOfClase(Class<?> clazz){
+    private void deleteAllInstanciasOfClase(Class<?> clazz){
     	String hql = "SELECT i.id FROM instancia i inner join clase c on i.clase_id = c.id WHERE c.nombre =:clase";
         Query q = this.em.createNativeQuery(hql);
         q.setParameter("clase", clazz.getName());
@@ -128,6 +109,7 @@ public class ClaseService {
 			Instancia instancia = em.find(Instancia.class, idInstancia);
 			em.remove(instancia);
 		}
+		em.flush();
     }
 
     

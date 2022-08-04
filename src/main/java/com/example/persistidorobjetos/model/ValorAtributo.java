@@ -32,7 +32,6 @@ import lombok.NoArgsConstructor;
 public class ValorAtributo {
     @Id
     @GeneratedValue(strategy = TABLE)
-    @EqualsAndHashCode.Exclude
     private Integer id;
 //    @ManyToOne
 //    private AtributoInstancia atributoInstancia;
