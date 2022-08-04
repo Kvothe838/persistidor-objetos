@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import com.example.persistidorobjetos.examples.*;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,58 +44,6 @@ public class PersistentObjectTest {
 	SessionService sessionService;
 	@Autowired
 	InstanciaService instanciaService;
-
-//	@Before
-//	@Transactional
-//	@Commit
-	public void cleanDatabase(){
-		
-		
-		Query queryClaseAtributos = this.em.createNativeQuery("delete from CLASE_ATRIBUTOS;");
-		Query queryAtributoInstancia = this.em.createNativeQuery("delete from ATRIBUTO_INSTANCIA;");
-		Query queryAtributo = this.em.createNativeQuery("delete from ATRIBUTO;");
-		Query queryTipoAtributo = this.em.createNativeQuery("delete from TIPO_ATRIBUTO;");
-		Query queryValorAtributoValorAtributoList = this.em.createNativeQuery("delete from VALOR_ATRIBUTO_VALOR_ATRIBUTO_LIST;");
-		Query queryValorAtributo = this.em.createNativeQuery("delete from VALOR_ATRIBUTO;");
-		Query queryInstancia = this.em.createNativeQuery("delete from INSTANCIA;");
-		Query queryClase = this.em.createNativeQuery("delete from CLASE;");
-		Query querySession = this.em.createNativeQuery("delete from SESSION;");
-		Query queryHibernateSequences = this.em.createNativeQuery("delete from HIBERNATE_SEQUENCES;");
-		
-		int rowsDeleted = queryClaseAtributos.executeUpdate();
-		rowsDeleted = queryAtributoInstancia.executeUpdate();
-		rowsDeleted = queryAtributo.executeUpdate();
-		rowsDeleted = queryTipoAtributo.executeUpdate();
-		rowsDeleted = queryValorAtributoValorAtributoList.executeUpdate();
-		rowsDeleted = queryValorAtributo.executeUpdate();
-		rowsDeleted = queryInstancia.executeUpdate();
-		rowsDeleted = queryClase.executeUpdate();
-		rowsDeleted = querySession.executeUpdate();
-		rowsDeleted = queryHibernateSequences.executeUpdate();
-		
-//		Query queryAtributoInstancia = this.em.createNativeQuery("DELETE FROM atributo_instancia");
-//		Query queryValorAtributo = this.em.createNativeQuery("DELETE FROM valor_atributo");
-//		Query queryInstancia = this.em.createNativeQuery("DELETE FROM instancia");
-//		Query queryAtributo = this.em.createNativeQuery("DELETE FROM atributo");
-//		Query queryTipoAtributo = this.em.createNativeQuery("DELETE FROM tipo_atributo");
-//		Query queryClase = this.em.createNativeQuery("DELETE FROM clase");
-//		Query querySession = this.em.createNativeQuery("DELETE FROM session");
-//
-//		int rowsDeleted = queryAtributoInstancia.executeUpdate();
-//		System.out.println("atributo_instancia entities deleted: " + rowsDeleted);
-//		rowsDeleted = queryValorAtributo.executeUpdate();
-//		System.out.println("valor_atributo entities deleted: " + rowsDeleted);
-//		rowsDeleted = queryInstancia.executeUpdate();
-//		System.out.println("instancia entities deleted: " + rowsDeleted);
-//		rowsDeleted = queryAtributo.executeUpdate();
-//		System.out.println("atributo entities deleted: " + rowsDeleted);
-//		rowsDeleted = queryTipoAtributo.executeUpdate();
-//		System.out.println("tipo_atributo entities deleted: " + rowsDeleted);
-//		rowsDeleted = queryClase.executeUpdate();
-//		System.out.println("clase entities deleted: " + rowsDeleted);
-//		rowsDeleted = querySession.executeUpdate();
-//		System.out.println("session entities deleted: " + rowsDeleted);
-	}
     
 	@Test
 	@Transactional

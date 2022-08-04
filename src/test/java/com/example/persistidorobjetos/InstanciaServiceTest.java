@@ -95,47 +95,4 @@ public class InstanciaServiceTest {
 		instanciaService.saveInstancia(instancia);
 		
 	}
-	
-	@Test
-	@Transactional
-	public void loadInstancia() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
-		this.test();
-		Instancia instancia = instanciaService.getInstanciaByClaseAndSession(PersonaConObjetosComplejos.class.getName(), 1l);
-
-		assertNull(instancia);
-
-		/*assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
-				Objects.equals(atributoInstancia.getAtributo().getNombre(), "dni")
-				&& Objects.equals(atributoInstancia.getValorAtributo().getValor(), "34334355"))
-		);
-		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
-				Objects.equals(atributoInstancia.getAtributo().getNombre(), "nombre")
-				&& Objects.equals(atributoInstancia.getValorAtributo().getValor(), "Juan Carlos"))
-		);
-		
-		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
-				Objects.equals(atributoInstancia.getAtributo().getNombre(), "auto")
-				&& atributoInstancia.getValorAtributo().getInstancia() != null)
-		);
-		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
-				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos")
-				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));*/
-	}
-	
-//	@Test
-	public void loadObjectTest() throws Exception {
-		instanciaService.loadObject(1L, PersonaConObjetosComplejos.class);
-	}
-
-//	@Test
-	public void sarasa(){
-		Class<?> clazz = Persona3.class;
-		for(Field field : Persona3.class.getDeclaredFields()){
-			if(field.isAnnotationPresent(Persistable.class) ||
-					(clazz.isAnnotationPresent(Persistable.class) && !field.isAnnotationPresent(NotPersistable.class))){
-				System.out.println(field.getGenericType().getTypeName());
-			}
-		}
-	}
-	
 }

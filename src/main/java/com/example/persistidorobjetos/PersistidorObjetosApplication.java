@@ -17,7 +17,7 @@ public class PersistidorObjetosApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		// Ejemplo de uso.
-		Persona1 persona = new Persona1();
+		/*Persona1 persona = new Persona1();
 		persona.setNombre("Juan");
 		persona.setDni(1234);
 		boolean guardado = persistentObject.store(1, persona);
@@ -31,6 +31,6 @@ public class PersistidorObjetosApplication implements CommandLineRunner {
 		persistentObject.delete(1, Persona1.class);
 		System.out.println("Persona borrada");
 		exists = persistentObject.exists(1, Persona1.class);
-		System.out.printf("Existe: %s\n", exists);
+		System.out.printf("Existe: %s\n", exists);*/
 	}
 }
