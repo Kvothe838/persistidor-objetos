@@ -37,11 +37,8 @@ public class ValorAtributoService {
                 boolean esTipoPrimitivo = atributo.getTipoAtributo().getClase() == null;
                 ArrayList<String> valores;
 
-                System.out.printf("%s es tipo primitivo: %s\n", valor, esTipoPrimitivo);
-
                 if(esTipoPrimitivo){
                     valores = (ArrayList<String>) list.stream().map(elemento -> String.valueOf(elemento)).collect(Collectors.toList());
-                    System.out.println("VALORES:");
                     System.out.println(valores);
                 } else {
                     list.forEach(elemento -> {

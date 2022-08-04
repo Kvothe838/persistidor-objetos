@@ -201,7 +201,6 @@ public class PersistentObjectTest {
 						&& valorAtributo.getValores() != null
 						&& valorAtributo.getValores().size() == 1
 						&& valorAtributo.getValores().contains(String.valueOf(dni))));
-		System.out.println(valores);
 		assertTrue(valores.stream().anyMatch(valorAtributo ->
 				valorAtributo.getInstancia() == null
 						&& valorAtributo.getAtributo() != null
