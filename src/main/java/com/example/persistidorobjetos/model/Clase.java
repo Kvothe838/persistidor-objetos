@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Entity
@@ -28,5 +29,15 @@ public class Clase {
         }
 
         this.instancias.add(instanciaPrincipal);
+    }
+
+    public Instancia getInstanciaPrincipal(){
+        Optional<Instancia> posibleInstancia = this.instancias.stream().filter(Instancia::isPrincipal).findFirst();
+
+        if(posibleInstancia.isEmpty()){
+            return null;
+        }
+
+        return posibleInstancia.get();
     }
 }

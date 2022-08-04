@@ -17,6 +17,8 @@ public class ValorAtributo {
     private List<String> valores;
     @ManyToOne
     private Instancia instancia;
+    @ManyToOne
+    private Atributo atributo;
 
     public void setValor(String valor){
         this.valores = new ArrayList<>();
