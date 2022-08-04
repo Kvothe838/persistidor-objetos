@@ -3,6 +3,8 @@ package com.example.persistidorobjetos.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -11,6 +13,13 @@ public class ValorAtributo {
     @Id
     @GeneratedValue(strategy= GenerationType.TABLE)
     private int id;
-    @Column(name="valor")
-    private String valor;
+    @ElementCollection
+    private List<String> valores;
+    @ManyToOne
+    private Instancia instancia;
+
+    public void setValor(String valor){
+        this.valores = new ArrayList<>();
+        this.valores.add(valor);
+    }
 }

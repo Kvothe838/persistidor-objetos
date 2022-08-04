@@ -93,10 +93,11 @@ public class ClaseServiceTest {
 
         this.em.merge(clase);
 
-        this.claseService.borrarAtributos(clase);
+        this.claseService.borrarAtributosEInstancias(clase, Persona1.class);
 
         Clase clasePersistida = this.claseService.getOrSave(nombreClase, session);
 
         assertNull(clasePersistida.getAtributos());
+        assertNull(clasePersistida.getInstancias());
     }
 }

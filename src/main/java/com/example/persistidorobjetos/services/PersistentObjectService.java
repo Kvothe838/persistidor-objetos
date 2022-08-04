@@ -2,6 +2,7 @@ package com.example.persistidorobjetos.services;
 
 import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Clase;
+import com.example.persistidorobjetos.model.Instancia;
 import com.example.persistidorobjetos.model.Session;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +18,31 @@ public class PersistentObjectService {
     ClaseService claseService;
     @Autowired
     AtributoService atributoService;
+    @Autowired
+    InstanciaService instanciaService;
 
-    public boolean store(long sId, Object o) {
+    public boolean store(Long sId, Object o) {
         if(o == null){
             throw new NotYetImplementedException();
         }
 
-        Session session = this.sessionService.getOrSave(sId);
+        boolean esExterno = sId != null;
 
-        Class<?> clazz = o.getClass();
-        String clazzName = clazz.getName();
-        Clase clase = this.claseService.getOrSave(clazzName, session);
+        if(esExterno){
+            Session session = this.sessionService.getOrSave(sId);
 
-        this.claseService.borrarAtributos(clase);
-        ArrayList<Atributo> atributos = this.atributoService.generarAtributos(o);
-        clase.setAtributos(atributos);
+            Class<?> clazz = o.getClass();
+            String clazzName = clazz.getName();
+            Clase clase = this.claseService.getOrSave(clazzName, session);
+
+            this.claseService.borrarAtributosEInstancias(clase, clazz);
+
+            ArrayList<Atributo> atributos = this.atributoService.generarAtributos(o);
+            clase.setAtributos(atributos);
+
+            Instancia instanciaPrincipal = this.instanciaService.generarInstanciaPrincipal(o, atributos);
+            clase.agregarInstanciaPrincipal(instanciaPrincipal);
+        }
 
         return false;
     }

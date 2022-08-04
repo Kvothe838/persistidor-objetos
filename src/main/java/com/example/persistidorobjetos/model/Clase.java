@@ -3,6 +3,7 @@ package com.example.persistidorobjetos.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,4 +19,14 @@ public class Clase {
     private Session session;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Atributo> atributos;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Instancia> instancias;
+
+    public void agregarInstanciaPrincipal(Instancia instanciaPrincipal) {
+        if(this.instancias == null){
+            this.instancias = new ArrayList<>();
+        }
+
+        this.instancias.add(instanciaPrincipal);
+    }
 }

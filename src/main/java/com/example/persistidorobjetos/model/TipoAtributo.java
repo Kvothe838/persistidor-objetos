@@ -16,6 +16,4 @@ public class TipoAtributo {
     private String nombre;
     @OneToOne
     private Clase clase;
-    @OneToMany
-    private List<ValorAtributo> valores;
 }
