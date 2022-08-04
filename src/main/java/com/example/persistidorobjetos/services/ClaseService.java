@@ -9,8 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import static org.hsqldb.DatabaseManager.getSession;
-
 @Service
 public class ClaseService {
     @Autowired
@@ -29,6 +27,18 @@ public class ClaseService {
         }
     }
 
+    public Clase get(String nombre){
+        try{
+            String queryStr = "select c from Clase c where c.nombre = :nombre";
+            Query query = this.em.createQuery(queryStr)
+                    .setParameter("nombre", nombre);
+
+            return (Clase) query.getSingleResult();
+        } catch(NoResultException e){
+            return null;
+        }
+    }
+
     public void save(String nombre, Session session) {
         Clase clase = new Clase();
 
@@ -39,11 +49,11 @@ public class ClaseService {
     }
 
     public Clase getOrSave(String clazzName, Session session) {
-        Clase clase = this.get(clazzName, session.getId());
+        Clase clase = session == null ? this.get(clazzName) : this.get(clazzName, session.getId());
 
         if(clase == null){
             this.save(clazzName, session);
-            clase = this.get(clazzName, session.getId());
+            clase = session == null ? this.get(clazzName) : this.get(clazzName, session.getId());
         }
 
         return clase;
