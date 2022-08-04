@@ -1,10 +1,12 @@
 package com.example.persistidorobjetos.examples;
 
+import com.example.persistidorobjetos.annotations.Persistable;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 
+@Persistable
 public class Persona3
 {
 	@Getter @Setter

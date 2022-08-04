@@ -23,7 +23,6 @@ import lombok.NoArgsConstructor;
 public class Instancia {
     @Id
     @GeneratedValue(strategy = TABLE)
-    @EqualsAndHashCode.Exclude
     private Integer id;
     @ManyToOne
     private Clase clase;

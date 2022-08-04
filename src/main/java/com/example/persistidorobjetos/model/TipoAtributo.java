@@ -19,7 +19,6 @@ import static javax.persistence.GenerationType.TABLE;
 public class TipoAtributo {
     @Id
     @GeneratedValue(strategy = TABLE)
-    @EqualsAndHashCode.Exclude
     private Integer id;
     @Column(name="nombre")
     private String nombre;

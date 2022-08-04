@@ -18,7 +18,6 @@ import static javax.persistence.GenerationType.TABLE;
 @Table(name="session")
 public class Session {
     @Id
-    @EqualsAndHashCode.Exclude
     private Long id;
     @Column(name="ultimo_acceso")
     private Date ultimoAcceso;

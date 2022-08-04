@@ -31,7 +31,6 @@ public class SessionService {
     @Transactional
     public void updateSession(Session session){
         session.setUltimoAcceso(new Date());
-
         this.em.merge(session);
     }
 
@@ -44,5 +43,11 @@ public class SessionService {
         } else {
             this.updateSession(session);
         }
+    }
+    
+    public long elapsedTime(long sId){
+    	Session session = this.getSession(sId);
+    	long ultimoAccesoEnMilli = session.getUltimoAcceso().toInstant().toEpochMilli();
+    	return new Date().toInstant().toEpochMilli() - ultimoAccesoEnMilli;
     }
 }

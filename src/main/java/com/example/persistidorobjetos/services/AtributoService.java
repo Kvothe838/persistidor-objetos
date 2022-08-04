@@ -31,7 +31,7 @@ public class AtributoService {
     private ClaseService claseService;
 
     public Atributo generateAtributoObject(Field field){
-        TipoAtributo tipoAtributo = this.tipoAtributoService.getTipoAtributo(field.getType().getName());
+        TipoAtributo tipoAtributo = this.tipoAtributoService.getTipoAtributo(field.getGenericType().getTypeName());
 
         Clase clase;
         //TODO con los demas tipos de collections

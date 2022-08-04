@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -14,8 +15,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.persistidorobjetos.annotations.NotPersistable;
+import com.example.persistidorobjetos.annotations.Persistable;
 import com.example.persistidorobjetos.examples.Auto;
+import com.example.persistidorobjetos.examples.Persona3;
 import com.example.persistidorobjetos.examples.PersonaConObjetosComplejos;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Instancia;
@@ -36,8 +41,8 @@ public class InstanciaServiceTest {
 	SessionService sessionService;
 	
 	
-//	@Test
-//	@Transactional
+	@Test
+	@Transactional
 	public void test() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
@@ -92,8 +97,10 @@ public class InstanciaServiceTest {
 	}
 	
 	@Test
-	public void loadInstancia(){
-		Instancia instancia = instanciaService.recoverInstancia(1L, 1l);
+	@Transactional
+	public void loadInstancia() throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException{
+		this.test();
+		Instancia instancia = instanciaService.getInstanciaByClaseAndSession(PersonaConObjetosComplejos.class.getName(), 1l);
 
 		assertNull(instancia);
 
@@ -113,6 +120,22 @@ public class InstanciaServiceTest {
 		assertTrue(instancia.getAtributos().stream().anyMatch(atributoInstancia ->
 				Objects.equals(atributoInstancia.getAtributo().getNombre(), "telefonos")
 				&& atributoInstancia.getValorAtributo().getValorAtributoList().size() == 3));*/
+	}
+	
+//	@Test
+	public void loadObjectTest() throws Exception {
+		instanciaService.loadObject(1L, PersonaConObjetosComplejos.class);
+	}
+
+//	@Test
+	public void sarasa(){
+		Class<?> clazz = Persona3.class;
+		for(Field field : Persona3.class.getDeclaredFields()){
+			if(field.isAnnotationPresent(Persistable.class) ||
+					(clazz.isAnnotationPresent(Persistable.class) && !field.isAnnotationPresent(NotPersistable.class))){
+				System.out.println(field.getGenericType().getTypeName());
+			}
+		}
 	}
 	
 }
