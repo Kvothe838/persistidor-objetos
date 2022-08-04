@@ -269,41 +269,7 @@ public class PersistentObjectTest {
 	public void storeMasComplicadoTest() throws Exception{
 		Date momentoAntesDelAcceso = new Date(); 
 		
-		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
-		persona.setDni(34334355);
-		persona.setNombre("Juan Carlos");
-		ArrayList<String> telefonos = new ArrayList<String>();
-		telefonos.add("15-4585-5454");
-		telefonos.add("15-1221-1221");
-		telefonos.add("15-6655-6655");
-		persona.setTelefonos(telefonos);
-		//no instancia kilometros recorridos
-		Auto auto = new Auto();
-		auto.setMarca("Fiat");
-		auto.setModelo("600");
-		persona.setAuto(auto);
-		Direccion direccion1 = new Direccion();
-		direccion1.setCalle("Calle Falsa");
-		direccion1.setCodigoPostal("1234");
-		direccion1.setLocalidad("Mad Remia");
-		direccion1.setNumero(123);
-		direccion1.setPais("Argentina");
-		direccion1.setProvincia("Buenos Aires");
-		Direccion direccion2 = new Direccion();
-		direccion2.setCalle("Calle Falsa Paralela");
-		direccion2.setCodigoPostal("4567");
-		direccion2.setLocalidad("Mad Remia");
-		direccion2.setNumero(123);
-		direccion2.setPais("Argentina");
-		direccion2.setProvincia("Chubut");
-		Direccion direccion3 = null;
-		//una de las direcciones es null
-		ArrayList<Direccion> direcciones = new ArrayList<>(Arrays.asList(direccion1, direccion2, direccion3));
-		persona.setDirecciones(direcciones);
-		//uno de los Integer es null
-		ArrayList<Integer> numerosFavoritos = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,null));
-		persona.setNumerosFavoritos(numerosFavoritos);
-		persona.setLeGustaElArte(true);
+		PersonaConObjetosComplejos persona = getNewOtraPersonaConObjetosComplejos();
 		
 		assertTrue(persistentObject.store(1, persona));
 		
@@ -319,7 +285,7 @@ public class PersistentObjectTest {
 	@Transactional
 	public void loadMasComplicadoTest() throws Exception{
 		Date momentoAntesDelAcceso = new Date(); 
-		PersonaConObjetosComplejos persona = getPersonaConObjetosComplejos();
+		PersonaConObjetosComplejos persona = getNewPersonaConObjetosComplejos();
 		assertTrue(persistentObject.store(1l, persona));
 		
 		PersonaConObjetosComplejos personaObtenida = persistentObject.load(1l, PersonaConObjetosComplejos.class);
@@ -331,6 +297,22 @@ public class PersistentObjectTest {
 		long millis = persistentObject.elapsedTime(1l);
 		assertTrue(millis > 0);
 		assertTrue(millis < 5000);
+	}
+	
+	@Test
+	@Transactional
+	public void storeUpdateTest() throws Exception{
+		Date momentoAntesDelAcceso = new Date(); 
+		
+		PersonaConObjetosComplejos persona = getNewPersonaConObjetosComplejos();
+		PersonaConObjetosComplejos otraPersona = getNewOtraPersonaConObjetosComplejos();
+		
+		assertTrue(persistentObject.store(1, persona));
+		assertTrue(persistentObject.store(1, otraPersona));
+		
+		PersonaConObjetosComplejos otraPersonaGuardada = persistentObject.load(1l, PersonaConObjetosComplejos.class);
+		
+		assertEquals(otraPersona, otraPersonaGuardada);
 	}
 	
 	@Test
@@ -363,7 +345,7 @@ public class PersistentObjectTest {
 	@Test
 	@Transactional
 	public void deleteInstanciaForSessionTest() throws Exception{
-		PersonaConObjetosComplejos persona = getPersonaConObjetosComplejos();
+		PersonaConObjetosComplejos persona = getNewPersonaConObjetosComplejos();
 		assertTrue(persistentObject.store(1l, persona));
 		
 		Date momentoAntesDelAcceso = new Date(); 
@@ -410,7 +392,9 @@ public class PersistentObjectTest {
 		assertFalse(session.getUltimoAcceso().compareTo(momentoAntesDelAcceso) > 0);
 	}
 	
-	private PersonaConObjetosComplejos getPersonaConObjetosComplejos(){
+	
+	
+	private PersonaConObjetosComplejos getNewPersonaConObjetosComplejos(){
 		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
 		persona.setDni(34334355);
 		persona.setNombre("Juan Carlos");
@@ -446,6 +430,44 @@ public class PersistentObjectTest {
 		ArrayList<Integer> numerosFavoritos = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,null));
 		persona.setNumerosFavoritos(numerosFavoritos);
 		persona.setLeGustaElArte(true);
+		return persona;
+	}
+	
+	private PersonaConObjetosComplejos getNewOtraPersonaConObjetosComplejos(){
+		PersonaConObjetosComplejos persona = new PersonaConObjetosComplejos();
+		persona.setDni(42566899);
+		persona.setNombre("Maria Belen");
+		ArrayList<String> telefonos = new ArrayList<String>();
+		telefonos.add("15-7777-5454");
+		telefonos.add("15-3366-1221");
+		persona.setTelefonos(telefonos);
+		//no instancia kilometros recorridos
+		Auto auto = new Auto();
+		auto.setMarca("Chevrolet");
+		auto.setModelo("Agile");
+		persona.setAuto(auto);
+		Direccion direccion1 = new Direccion();
+		direccion1.setCalle("Calle Falsa");
+		direccion1.setCodigoPostal("1234");
+		direccion1.setLocalidad("Mad Remia");
+		direccion1.setNumero(123);
+		direccion1.setPais("Argentina");
+		direccion1.setProvincia("Buenos Aires");
+		Direccion direccion2 = new Direccion();
+		direccion2.setCalle("Calle Falsa Paralela");
+		direccion2.setCodigoPostal("4567");
+		direccion2.setLocalidad("Mad Remia");
+		direccion2.setNumero(123);
+		direccion2.setPais("Argentina");
+		direccion2.setProvincia("Chubut");
+		Direccion direccion3 = null;
+		//una de las direcciones es null
+		ArrayList<Direccion> direcciones = new ArrayList<>(Arrays.asList(direccion1, direccion2, direccion3));
+		persona.setDirecciones(direcciones);
+		//uno de los Integer es null
+		ArrayList<Integer> numerosFavoritos = new ArrayList<>(Arrays.asList(11,12,13,14,15,16,17,null));
+		persona.setNumerosFavoritos(numerosFavoritos);
+		persona.setLeGustaElArte(false);
 		return persona;
 	}
 	
