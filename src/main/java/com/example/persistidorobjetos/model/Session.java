@@ -11,7 +11,9 @@ import java.util.Date;
 public class Session {
     @Id
     @GeneratedValue(strategy=GenerationType.TABLE)
-    private long id;
+    private int id;
+    @Column(name="sId")
+    private long sId;
     @Column(name = "ultimo_acceso")
     private Date ultimoAcceso;
 }

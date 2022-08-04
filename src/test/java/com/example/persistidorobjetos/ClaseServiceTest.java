@@ -1,9 +1,11 @@
 package com.example.persistidorobjetos;
 
 import com.example.persistidorobjetos.examples.Persona1;
+import com.example.persistidorobjetos.model.Atributo;
 import com.example.persistidorobjetos.model.Clase;
 import com.example.persistidorobjetos.model.Session;
 import com.example.persistidorobjetos.services.ClaseService;
+import com.example.persistidorobjetos.services.SessionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 @SpringBootTest
@@ -24,6 +28,8 @@ public class ClaseServiceTest {
     private EntityManager em;
     @Autowired
     private ClaseService claseService;
+    @Autowired
+    private SessionService sessionService;
 
     @Before
     @Transactional
@@ -68,5 +74,29 @@ public class ClaseServiceTest {
         assertNotNull(sessionRecuperada);
         assertNotEquals(0, sessionRecuperada.getId());
         assertEquals(sessionRecuperada.getUltimoAcceso(), ultimoAcceso);
+    }
+
+    @Test
+    @Transactional
+    public void borrarAtributosTest(){
+        long sId = 1;
+
+        Session session = this.sessionService.getOrSave(sId);
+        String nombreClase = Persona1.class.getName();
+        Clase clase = this.claseService.getOrSave(nombreClase, session);
+
+        Atributo atributo1 = new Atributo();
+        atributo1.setNombre("atributo1");
+        Atributo atributo2 = new Atributo();
+        atributo2.setNombre("atributo2");
+        clase.setAtributos(new ArrayList<>(Arrays.asList(atributo1, atributo2)));
+
+        this.em.merge(clase);
+
+        this.claseService.borrarAtributos(clase);
+
+        Clase clasePersistida = this.claseService.getOrSave(nombreClase, session);
+
+        assertNull(clasePersistida.getAtributos());
     }
 }

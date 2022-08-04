@@ -16,6 +16,6 @@ public class Clase {
     private String nombre;
     @ManyToOne
     private Session session;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Atributo> atributos;
 }
